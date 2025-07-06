@@ -104,7 +104,7 @@ export const useWorkspaceStore = defineStore('workspace', () => {
         .from('tasks')
         .insert({
           user_id: authStore.user.id,
-          name: `任務 ${tasks.value.length + 1}`,
+          name: '新任務',
           status: 'active'
         })
         .select()
