@@ -79,7 +79,7 @@ onMounted(async () => {
     <!-- Main Content -->
     <div v-else-if="workspaceStore.activeWorkspace" class="h-full flex flex-col">
       <!-- Header -->
-      <h1 class="text-2xl font-bold mb-1">
+      <h1 class="text-2xl font-bold mb-1 text-blue-700 dark:text-blue-300">
         {{ workspaceStore.activeWorkspace.name }}
       </h1>
       <p class="text-sm text-gray-500 mb-6">
@@ -91,7 +91,7 @@ onMounted(async () => {
       <nav class="-mb-px flex gap-6">
         <button
           @click="activeTab = 'search'"
-          :class="['py-2 px-1 text-sm font-medium border-b-2', activeTab === 'search' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300']"
+          :class="['py-2 px-1 text-sm font-medium border-b-2', activeTab === 'search' ? 'border-blue-700 text-blue-700 dark:text-blue-300' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300']"
         >
           搜尋
         </button>

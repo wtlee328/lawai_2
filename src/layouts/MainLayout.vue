@@ -129,7 +129,7 @@ onUnmounted(() => {
               @click="handleWorkspaceSwitch(ws.id)"
               class="p-2 rounded-md cursor-pointer flex items-center justify-between group"
               :class="{
-                'bg-blue-600 text-white font-semibold': ws.id === workspaceStore.activeWorkspaceId,
+                'bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold': ws.id === workspaceStore.activeWorkspaceId,
                 'hover:bg-gray-200 dark:hover:bg-gray-700': ws.id !== workspaceStore.activeWorkspaceId
               }"
             >

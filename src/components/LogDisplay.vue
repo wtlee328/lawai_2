@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between mb-6">
       <div class="flex items-center space-x-3">
         <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
-        <h3 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">搜索進度</h3>
+        <h3 class="text-xl text-blue-700 dark:text-blue-300">搜索進度</h3>
       </div>
       <button
         v-if="searchSteps.length > 0"
