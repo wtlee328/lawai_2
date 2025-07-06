@@ -1,0 +1,1108 @@
+[
+  {
+    "category_id": 1,
+    "category_name": "民法總則",
+    "subcategories": [
+      {
+        "subcategory_id": "1-1",
+        "subcategory_name": "法律行為與意思表示"
+      },
+      {
+        "subcategory_id": "1-2",
+        "subcategory_name": "代理與代表"
+      },
+      {
+        "subcategory_id": "1-3",
+        "subcategory_name": "消滅時效"
+      },
+      {
+        "subcategory_id": "1-4",
+        "subcategory_name": "法人"
+      },
+      {
+        "subcategory_id": "1-5",
+        "subcategory_name": "住所"
+      },
+      {
+        "subcategory_id": "1-6",
+        "subcategory_name": "權利濫用與誠信原則"
+      },
+      {
+        "subcategory_id": "1-7",
+        "subcategory_name": "失蹤與死亡宣告"
+      },
+      {
+        "subcategory_id": "1-8",
+        "subcategory_name": "法律適用原則"
+      }
+    ]
+  },
+  {
+    "category_id": 2,
+    "category_name": "債編",
+    "subcategories": [
+      {
+        "subcategory_id": "2-1",
+        "subcategory_name": "債法總論"
+      },
+      {
+        "subcategory_id": "2-2",
+        "subcategory_name": "買賣契約"
+      },
+      {
+        "subcategory_id": "2-3",
+        "subcategory_name": "租賃關係"
+      },
+      {
+        "subcategory_id": "2-4",
+        "subcategory_name": "承攬契約"
+      },
+      {
+        "subcategory_id": "2-5",
+        "subcategory_name": "委任契約"
+      },
+      {
+        "subcategory_id": "2-6",
+        "subcategory_name": "運送契約"
+      },
+      {
+        "subcategory_id": "2-7",
+        "subcategory_name": "保證與人事保證"
+      },
+      {
+        "subcategory_id": "2-8",
+        "subcategory_name": "合夥"
+      },
+      {
+        "subcategory_id": "2-9",
+        "subcategory_name": "不當得利"
+      },
+      {
+        "subcategory_id": "2-10",
+        "subcategory_name": "無因管理"
+      },
+      {
+        "subcategory_id": "2-11",
+        "subcategory_name": "詐害債權"
+      },
+      {
+        "subcategory_id": "2-12",
+        "subcategory_name": "其他有名契約"
+      },
+      {
+        "subcategory_id": "2-13",
+        "subcategory_name": "無名契約與混合契約"
+      },
+      {
+        "subcategory_id": "2-14",
+        "subcategory_name": "消費借貸"
+      },
+      {
+        "subcategory_id": "2-15",
+        "subcategory_name": "債權保全"
+      },
+      {
+        "subcategory_id": "2-16",
+        "subcategory_name": "和解契約"
+      },
+      {
+        "subcategory_id": "2-17",
+        "subcategory_name": "定型化契約與消費者保護"
+      },
+      {
+        "subcategory_id": "2-18",
+        "subcategory_name": "定期行為"
+      },
+      {
+        "subcategory_id": "2-19",
+        "subcategory_name": "政府採購契約"
+      },
+      {
+        "subcategory_id": "2-20",
+        "subcategory_name": "借名登記"
+      },
+      {
+        "subcategory_id": "2-21",
+        "subcategory_name": "贈與契約"
+      },
+      {
+        "subcategory_id": "2-22",
+        "subcategory_name": "僱傭契約"
+      },
+      {
+        "subcategory_id": "2-23",
+        "subcategory_name": "租佃爭議"
+      },
+      {
+        "subcategory_id": "2-24",
+        "subcategory_name": "寄託契約"
+      },
+      {
+        "subcategory_id": "2-25",
+        "subcategory_name": "營業讓與與債務承擔"
+      },
+      {
+        "subcategory_id": "2-26",
+        "subcategory_name": "債務不履行"
+      },
+      {
+        "subcategory_id": "2-27",
+        "subcategory_name": "情事變更原則"
+      },
+      {
+        "subcategory_id": "2-28",
+        "subcategory_name": "債權讓與"
+      },
+      {
+        "subcategory_id": "2-29",
+        "subcategory_name": "抵銷"
+      },
+      {
+        "subcategory_id": "2-30",
+        "subcategory_name": "債務清償"
+      },
+      {
+        "subcategory_id": "2-31",
+        "subcategory_name": "第三人利益契約"
+      },
+      {
+        "subcategory_id": "2-32",
+        "subcategory_name": "醫療契約"
+      },
+      {
+        "subcategory_id": "2-33",
+        "subcategory_name": "使用借貸"
+      },
+      {
+        "subcategory_id": "2-34",
+        "subcategory_name": "合會契約"
+      },
+      {
+        "subcategory_id": "2-35",
+        "subcategory_name": "違約金酌減"
+      },
+      {
+        "subcategory_id": "2-36",
+        "subcategory_name": "給付不能"
+      },
+      {
+        "subcategory_id": "2-37",
+        "subcategory_name": "契約承擔"
+      },
+      {
+        "subcategory_id": "2-38",
+        "subcategory_name": "契約解釋"
+      },
+      {
+        "subcategory_id": "2-39",
+        "subcategory_name": "居間契約"
+      },
+      {
+        "subcategory_id": "2-40",
+        "subcategory_name": "債務承擔"
+      },
+      {
+        "subcategory_id": "2-41",
+        "subcategory_name": "契約標的不能"
+      },
+      {
+        "subcategory_id": "2-42",
+        "subcategory_name": "履行契約"
+      },
+      {
+        "subcategory_id": "2-43",
+        "subcategory_name": "連帶債務與不真正連帶債務"
+      },
+      {
+        "subcategory_id": "2-44",
+        "subcategory_name": "契約解除與回復原狀"
+      },
+      {
+        "subcategory_id": "2-45",
+        "subcategory_name": "物之瑕疵擔保"
+      },
+      {
+        "subcategory_id": "2-46",
+        "subcategory_name": "條件與期限"
+      },
+      {
+        "subcategory_id": "2-47",
+        "subcategory_name": "違約金"
+      },
+      {
+        "subcategory_id": "2-48",
+        "subcategory_name": "懸賞廣告"
+      },
+      {
+        "subcategory_id": "2-49",
+        "subcategory_name": "權利瑕疵擔保"
+      },
+      {
+        "subcategory_id": "2-50",
+        "subcategory_name": "定金"
+      },
+      {
+        "subcategory_id": "2-51",
+        "subcategory_name": "受領遲延"
+      },
+      {
+        "subcategory_id": "2-52",
+        "subcategory_name": "契約相對性原則"
+      },
+      {
+        "subcategory_id": "2-53",
+        "subcategory_name": "預約與本約"
+      },
+      {
+        "subcategory_id": "2-54",
+        "subcategory_name": "同時履行抗辯"
+      },
+      {
+        "subcategory_id": "2-55",
+        "subcategory_name": "定期給付債權"
+      },
+      {
+        "subcategory_id": "2-56",
+        "subcategory_name": "隱名合夥"
+      },
+      {
+        "subcategory_id": "2-57",
+        "subcategory_name": "互易契約"
+      }
+    ]
+  },
+  {
+    "category_id": 3,
+    "category_name": "侵權行為",
+    "subcategories": [
+      {
+        "subcategory_id": "3-1",
+        "subcategory_name": "一般侵權責任"
+      },
+      {
+        "subcategory_id": "3-2",
+        "subcategory_name": "特殊侵權責任"
+      },
+      {
+        "subcategory_id": "3-3",
+        "subcategory_name": "人格權侵害"
+      },
+      {
+        "subcategory_id": "3-4",
+        "subcategory_name": "損害賠償"
+      },
+      {
+        "subcategory_id": "3-5",
+        "subcategory_name": "醫療過失"
+      },
+      {
+        "subcategory_id": "3-6",
+        "subcategory_name": "法人侵權責任"
+      },
+      {
+        "subcategory_id": "3-7",
+        "subcategory_name": "環境公害與公害糾紛"
+      },
+      {
+        "subcategory_id": "3-8",
+        "subcategory_name": "品種權要件與侵權"
+      },
+      {
+        "subcategory_id": "3-9",
+        "subcategory_name": "刑事附帶民事訴訟"
+      },
+      {
+        "subcategory_id": "3-10",
+        "subcategory_name": "證券詐欺"
+      },
+      {
+        "subcategory_id": "3-11",
+        "subcategory_name": "侵權行為損害賠償"
+      },
+      {
+        "subcategory_id": "3-12",
+        "subcategory_name": "請求權競合"
+      }
+    ]
+  },
+  {
+    "category_id": 4,
+    "category_name": "物權法",
+    "subcategories": [
+      {
+        "subcategory_id": "4-1",
+        "subcategory_name": "所有權與返還請求"
+      },
+      {
+        "subcategory_id": "4-2",
+        "subcategory_name": "共有與分割"
+      },
+      {
+        "subcategory_id": "4-3",
+        "subcategory_name": "不動產相鄰關係"
+      },
+      {
+        "subcategory_id": "4-4",
+        "subcategory_name": "地上權與農育權"
+      },
+      {
+        "subcategory_id": "4-5",
+        "subcategory_name": "抵押權"
+      },
+      {
+        "subcategory_id": "4-6",
+        "subcategory_name": "質權與動產擔保"
+      },
+      {
+        "subcategory_id": "4-7",
+        "subcategory_name": "不動產登記與公信力"
+      },
+      {
+        "subcategory_id": "4-8",
+        "subcategory_name": "區分所有與基地權利"
+      },
+      {
+        "subcategory_id": "4-9",
+        "subcategory_name": "公用地役關係"
+      },
+      {
+        "subcategory_id": "4-10",
+        "subcategory_name": "不動產開發與重劃"
+      },
+      {
+        "subcategory_id": "4-11",
+        "subcategory_name": "農地與農舍"
+      },
+      {
+        "subcategory_id": "4-12",
+        "subcategory_name": "袋地通行權"
+      },
+      {
+        "subcategory_id": "4-13",
+        "subcategory_name": "獨立建築物認定"
+      },
+      {
+        "subcategory_id": "4-14",
+        "subcategory_name": "占有"
+      },
+      {
+        "subcategory_id": "4-15",
+        "subcategory_name": "原住民保留地"
+      },
+      {
+        "subcategory_id": "4-16",
+        "subcategory_name": "法定租賃與類似關係"
+      },
+      {
+        "subcategory_id": "4-17",
+        "subcategory_name": "優先承買權"
+      },
+      {
+        "subcategory_id": "4-18",
+        "subcategory_name": "地役權"
+      },
+      {
+        "subcategory_id": "4-19",
+        "subcategory_name": "土地管制與使用限制"
+      },
+      {
+        "subcategory_id": "4-20",
+        "subcategory_name": "所有權移轉登記"
+      },
+      {
+        "subcategory_id": "4-21",
+        "subcategory_name": "留置權"
+      },
+      {
+        "subcategory_id": "4-22",
+        "subcategory_name": "事實上處分權"
+      },
+      {
+        "subcategory_id": "4-23",
+        "subcategory_name": "拆屋還地"
+      },
+      {
+        "subcategory_id": "4-24",
+        "subcategory_name": "土地合併登記"
+      },
+      {
+        "subcategory_id": "4-25",
+        "subcategory_name": "主物與從物及附合"
+      },
+      {
+        "subcategory_id": "4-26",
+        "subcategory_name": "畸零地與建築法規"
+      },
+      {
+        "subcategory_id": "4-27",
+        "subcategory_name": "土地徵收與收回權"
+      },
+      {
+        "subcategory_id": "4-28",
+        "subcategory_name": "物權通則與變動"
+      },
+      {
+        "subcategory_id": "4-29",
+        "subcategory_name": "典權"
+      },
+      {
+        "subcategory_id": "4-30",
+        "subcategory_name": "動產所有權與善意取得"
+      },
+      {
+        "subcategory_id": "4-31",
+        "subcategory_name": "確認通行權"
+      },
+      {
+        "subcategory_id": "4-32",
+        "subcategory_name": "確定土地界址"
+      },
+      {
+        "subcategory_id": "4-33",
+        "subcategory_name": "時效取得地上權"
+      },
+      {
+        "subcategory_id": "4-34",
+        "subcategory_name": "讓與擔保"
+      },
+      {
+        "subcategory_id": "4-35",
+        "subcategory_name": "時效取得與占有保護"
+      },
+      {
+        "subcategory_id": "4-36",
+        "subcategory_name": "遺失物拾得"
+      },
+      {
+        "subcategory_id": "4-37",
+        "subcategory_name": "日據時期不動產權利"
+      },
+      {
+        "subcategory_id": "4-38",
+        "subcategory_name": "公有財產管理"
+      },
+      {
+        "subcategory_id": "4-39",
+        "subcategory_name": "請求交付魚塭"
+      },
+      {
+        "subcategory_id": "4-40",
+        "subcategory_name": "返還土地"
+      },
+      {
+        "subcategory_id": "4-41",
+        "subcategory_name": "塗銷登記"
+      },
+      {
+        "subcategory_id": "4-42",
+        "subcategory_name": "財產處分與限制"
+      },
+      {
+        "subcategory_id": "4-43",
+        "subcategory_name": "孳息收取權"
+      },
+      {
+        "subcategory_id": "4-44",
+        "subcategory_name": "神明會與宗族財產"
+      }
+    ]
+  },
+  {
+    "category_id": 5,
+    "category_name": "親屬法",
+    "subcategories": [
+      {
+        "subcategory_id": "5-1",
+        "subcategory_name": "婚姻"
+      },
+      {
+        "subcategory_id": "5-2",
+        "subcategory_name": "夫妻財產制"
+      },
+      {
+        "subcategory_id": "5-3",
+        "subcategory_name": "父母子女"
+      },
+      {
+        "subcategory_id": "5-4",
+        "subcategory_name": "監護與輔助"
+      },
+      {
+        "subcategory_id": "5-5",
+        "subcategory_name": "姻親關係"
+      },
+      {
+        "subcategory_id": "5-6",
+        "subcategory_name": "扶養"
+      },
+      {
+        "subcategory_id": "5-7",
+        "subcategory_name": "離婚"
+      },
+      {
+        "subcategory_id": "5-8",
+        "subcategory_name": "收養"
+      },
+      {
+        "subcategory_id": "5-9",
+        "subcategory_name": "日據時期親屬關係"
+      },
+      {
+        "subcategory_id": "5-10",
+        "subcategory_name": "親屬會議"
+      }
+    ]
+  },
+  {
+    "category_id": 6,
+    "category_name": "繼承法",
+    "subcategories": [
+      {
+        "subcategory_id": "6-1",
+        "subcategory_name": "遺產繼承人與效力"
+      },
+      {
+        "subcategory_id": "6-2",
+        "subcategory_name": "遺產分割"
+      },
+      {
+        "subcategory_id": "6-3",
+        "subcategory_name": "遺囑與特留分"
+      },
+      {
+        "subcategory_id": "6-4",
+        "subcategory_name": "拋棄繼承與限定繼承"
+      },
+      {
+        "subcategory_id": "6-5",
+        "subcategory_name": "祭祀公業與派下權"
+      },
+      {
+        "subcategory_id": "6-6",
+        "subcategory_name": "日據時期繼承"
+      },
+      {
+        "subcategory_id": "6-7",
+        "subcategory_name": "繼承權侵害"
+      },
+      {
+        "subcategory_id": "6-8",
+        "subcategory_name": "聲請指定遺產管理人"
+      }
+    ]
+  },
+  {
+    "category_id": 7,
+    "category_name": "公司法",
+    "subcategories": [
+      {
+        "subcategory_id": "7-1",
+        "subcategory_name": "股東會與董事會決議"
+      },
+      {
+        "subcategory_id": "7-2",
+        "subcategory_name": "董事責任與公司治理"
+      },
+      {
+        "subcategory_id": "7-3",
+        "subcategory_name": "公司代表人與清算"
+      },
+      {
+        "subcategory_id": "7-4",
+        "subcategory_name": "公司資本與股份"
+      },
+      {
+        "subcategory_id": "7-5",
+        "subcategory_name": "企業併購"
+      },
+      {
+        "subcategory_id": "7-6",
+        "subcategory_name": "揭穿公司面紗與股東責任"
+      },
+      {
+        "subcategory_id": "7-7",
+        "subcategory_name": "股東權利與表決權"
+      },
+      {
+        "subcategory_id": "7-8",
+        "subcategory_name": "財產處分"
+      },
+      {
+        "subcategory_id": "7-9",
+        "subcategory_name": "公司權利能力與行為能力"
+      },
+      {
+        "subcategory_id": "7-10",
+        "subcategory_name": "公司組織變更與法人格"
+      },
+      {
+        "subcategory_id": "7-11",
+        "subcategory_name": "經理人與代表權"
+      },
+      {
+        "subcategory_id": "7-12",
+        "subcategory_name": "設立中公司與發起人責任"
+      },
+      {
+        "subcategory_id": "7-13",
+        "subcategory_name": "公司名稱與營業範圍"
+      },
+      {
+        "subcategory_id": "7-14",
+        "subcategory_name": "確認股東會決議無效事件"
+      },
+      {
+        "subcategory_id": "7-15",
+        "subcategory_name": "確認股東會決議不存在事件"
+      },
+      {
+        "subcategory_id": "7-16",
+        "subcategory_name": "確認股東關係不存在"
+      },
+      {
+        "subcategory_id": "7-17",
+        "subcategory_name": "確認股東會無效"
+      }
+    ]
+  },
+  {
+    "category_id": 8,
+    "category_name": "金融法規",
+    "subcategories": [
+      {
+        "subcategory_id": "8-1",
+        "subcategory_name": "證券交易法"
+      },
+      {
+        "subcategory_id": "8-2",
+        "subcategory_name": "銀行法"
+      },
+      {
+        "subcategory_id": "8-3",
+        "subcategory_name": "保險法"
+      },
+      {
+        "subcategory_id": "8-4",
+        "subcategory_name": "票據法"
+      },
+      {
+        "subcategory_id": "8-5",
+        "subcategory_name": "證券投資信託及顧問法"
+      },
+      {
+        "subcategory_id": "8-6",
+        "subcategory_name": "信用狀"
+      },
+      {
+        "subcategory_id": "8-7",
+        "subcategory_name": "給付票款"
+      }
+    ]
+  },
+  {
+    "category_id": 9,
+    "category_name": "智慧財產權法",
+    "subcategories": [
+      {
+        "subcategory_id": "9-1",
+        "subcategory_name": "專利權"
+      },
+      {
+        "subcategory_id": "9-2",
+        "subcategory_name": "著作權"
+      },
+      {
+        "subcategory_id": "9-3",
+        "subcategory_name": "商標權與營業秘密"
+      },
+      {
+        "subcategory_id": "9-4",
+        "subcategory_name": "智慧財產訴訟程序"
+      }
+    ]
+  },
+  {
+    "category_id": 10,
+    "category_name": "勞動法",
+    "subcategories": [
+      {
+        "subcategory_id": "10-1",
+        "subcategory_name": "勞動契約與競業禁止"
+      },
+      {
+        "subcategory_id": "10-2",
+        "subcategory_name": "工資與工作時間"
+      },
+      {
+        "subcategory_id": "10-3",
+        "subcategory_name": "退休金與資遣費"
+      },
+      {
+        "subcategory_id": "10-4",
+        "subcategory_name": "職業災害"
+      },
+      {
+        "subcategory_id": "10-5",
+        "subcategory_name": "勞資爭議與工會"
+      },
+      {
+        "subcategory_id": "10-6",
+        "subcategory_name": "職務發明與權利歸屬"
+      },
+      {
+        "subcategory_id": "10-7",
+        "subcategory_name": "性別平等與就業歧視"
+      },
+      {
+        "subcategory_id": "10-8",
+        "subcategory_name": "勞工保險"
+      },
+      {
+        "subcategory_id": "10-9",
+        "subcategory_name": "農民健康保險"
+      }
+    ]
+  },
+  {
+    "category_id": 11,
+    "category_name": "公寓大廈管理",
+    "subcategories": [
+      {
+        "subcategory_id": "11-1",
+        "subcategory_name": "區分所有權人會議與規約"
+      },
+      {
+        "subcategory_id": "11-2",
+        "subcategory_name": "共用與專有部分之權利義務"
+      },
+      {
+        "subcategory_id": "11-3",
+        "subcategory_name": "管理委員會之權責與訴訟"
+      }
+    ]
+  },
+  {
+    "category_id": 12,
+    "category_name": "國家賠償法",
+    "subcategories": [
+      {
+        "subcategory_id": "12-1",
+        "subcategory_name": "公務員職務行為"
+      },
+      {
+        "subcategory_id": "12-2",
+        "subcategory_name": "公共設施瑕疵"
+      },
+      {
+        "subcategory_id": "12-3",
+        "subcategory_name": "國賠程序與時效"
+      },
+      {
+        "subcategory_id": "12-4",
+        "subcategory_name": "國賠責任與減免"
+      },
+      {
+        "subcategory_id": "12-5",
+        "subcategory_name": "國家賠償"
+      },
+      {
+        "subcategory_id": "12-6",
+        "subcategory_name": "地政機關登記錯誤責任"
+      },
+      {
+        "subcategory_id": "12-7",
+        "subcategory_name": "行政機關賠償責任"
+      }
+    ]
+  },
+  {
+    "category_id": 13,
+    "category_name": "民事訴訟與非訟程序",
+    "subcategories": [
+      {
+        "subcategory_id": "13-1",
+        "subcategory_name": "起訴與審理原則"
+      },
+      {
+        "subcategory_id": "13-2",
+        "subcategory_name": "審判權與管轄"
+      },
+      {
+        "subcategory_id": "13-3",
+        "subcategory_name": "證據與事實認定"
+      },
+      {
+        "subcategory_id": "13-4",
+        "subcategory_name": "判決效力與救濟"
+      },
+      {
+        "subcategory_id": "13-5",
+        "subcategory_name": "保全程序"
+      },
+      {
+        "subcategory_id": "13-6",
+        "subcategory_name": "訴訟費用與救助"
+      },
+      {
+        "subcategory_id": "13-7",
+        "subcategory_name": "特殊訴訟程序"
+      },
+      {
+        "subcategory_id": "13-8",
+        "subcategory_name": "家事事件程序"
+      },
+      {
+        "subcategory_id": "13-9",
+        "subcategory_name": "當事人與訴訟參加"
+      },
+      {
+        "subcategory_id": "13-10",
+        "subcategory_name": "送達"
+      },
+      {
+        "subcategory_id": "13-11",
+        "subcategory_name": "裁定與異議"
+      },
+      {
+        "subcategory_id": "13-12",
+        "subcategory_name": "訴訟停止"
+      },
+      {
+        "subcategory_id": "13-13",
+        "subcategory_name": "調解與和解"
+      },
+      {
+        "subcategory_id": "13-14",
+        "subcategory_name": "閱覽卷宗"
+      },
+      {
+        "subcategory_id": "13-15",
+        "subcategory_name": "訴之合併"
+      },
+      {
+        "subcategory_id": "13-16",
+        "subcategory_name": "支付命令程序"
+      },
+      {
+        "subcategory_id": "13-17",
+        "subcategory_name": "非訟事件"
+      },
+      {
+        "subcategory_id": "13-18",
+        "subcategory_name": "訴訟程序瑕疵"
+      },
+      {
+        "subcategory_id": "13-19",
+        "subcategory_name": "法官迴避與公正性"
+      },
+      {
+        "subcategory_id": "13-20",
+        "subcategory_name": "確認之訴"
+      },
+      {
+        "subcategory_id": "13-21",
+        "subcategory_name": "上訴程序"
+      },
+      {
+        "subcategory_id": "13-22",
+        "subcategory_name": "訴之變更與追加"
+      },
+      {
+        "subcategory_id": "13-23",
+        "subcategory_name": "再審程序"
+      },
+      {
+        "subcategory_id": "13-24",
+        "subcategory_name": "計算報告之訴"
+      },
+      {
+        "subcategory_id": "13-25",
+        "subcategory_name": "反訴"
+      }
+    ]
+  },
+  {
+    "category_id": 14,
+    "category_name": "強制執行",
+    "subcategories": [
+      {
+        "subcategory_id": "14-1",
+        "subcategory_name": "執行程序與方法"
+      },
+      {
+        "subcategory_id": "14-2",
+        "subcategory_name": "執行救濟程序"
+      },
+      {
+        "subcategory_id": "14-3",
+        "subcategory_name": "執行標的與限制"
+      },
+      {
+        "subcategory_id": "14-4",
+        "subcategory_name": "提存與分配"
+      },
+      {
+        "subcategory_id": "14-5",
+        "subcategory_name": "債務人異議之訴"
+      },
+      {
+        "subcategory_id": "14-6",
+        "subcategory_name": "執行費用"
+      },
+      {
+        "subcategory_id": "14-7",
+        "subcategory_name": "第三人異議之訴"
+      },
+      {
+        "subcategory_id": "14-8",
+        "subcategory_name": "分配表異議之訴"
+      }
+    ]
+  },
+  {
+    "category_id": 15,
+    "category_name": "憲法與人民權利",
+    "subcategories": [
+      {
+        "subcategory_id": "15-1",
+        "subcategory_name": "結社自由與政黨自治"
+      },
+      {
+        "subcategory_id": "15-2",
+        "subcategory_name": "隱私權與個資保護"
+      },
+      {
+        "subcategory_id": "15-3",
+        "subcategory_name": "財產權保障"
+      },
+      {
+        "subcategory_id": "15-4",
+        "subcategory_name": "宗教自由與組織自主"
+      },
+      {
+        "subcategory_id": "15-5",
+        "subcategory_name": "言論自由"
+      },
+      {
+        "subcategory_id": "15-6",
+        "subcategory_name": "訴訟權"
+      }
+    ]
+  },
+  {
+    "category_id": 16,
+    "category_name": "破產法與債務清理",
+    "subcategories": [
+      {
+        "subcategory_id": "16-1",
+        "subcategory_name": "破產程序"
+      },
+      {
+        "subcategory_id": "16-2",
+        "subcategory_name": "消費者債務清理"
+      },
+      {
+        "subcategory_id": "16-3",
+        "subcategory_name": "公司重整"
+      }
+    ]
+  },
+  {
+    "category_id": 17,
+    "category_name": "仲裁法",
+    "subcategories": [
+      {
+        "subcategory_id": "17-1",
+        "subcategory_name": "仲裁協議與效力"
+      },
+      {
+        "subcategory_id": "17-2",
+        "subcategory_name": "撤銷仲裁判斷"
+      },
+      {
+        "subcategory_id": "17-3",
+        "subcategory_name": "仲裁判斷之執行"
+      },
+      {
+        "subcategory_id": "17-4",
+        "subcategory_name": "仲裁程序與費用"
+      },
+      {
+        "subcategory_id": "17-5",
+        "subcategory_name": "仲裁人選定與迴避"
+      }
+    ]
+  },
+  {
+    "category_id": 18,
+    "category_name": "涉外民事",
+    "subcategories": [
+      {
+        "subcategory_id": "18-1",
+        "subcategory_name": "國際私法與準據法"
+      },
+      {
+        "subcategory_id": "18-2",
+        "subcategory_name": "外國裁判之承認與執行"
+      },
+      {
+        "subcategory_id": "18-3",
+        "subcategory_name": "兩岸及港澳司法互助"
+      }
+    ]
+  },
+  {
+    "category_id": 19,
+    "category_name": "信託法",
+    "subcategories": [
+      {
+        "subcategory_id": "19-1",
+        "subcategory_name": "信託關係與效力"
+      },
+      {
+        "subcategory_id": "19-2",
+        "subcategory_name": "信託財產與強制執行"
+      },
+      {
+        "subcategory_id": "19-3",
+        "subcategory_name": "詐害信託"
+      }
+    ]
+  },
+  {
+    "category_id": 20,
+    "category_name": "公平交易法",
+    "subcategories": [
+      {
+        "subcategory_id": "20-1",
+        "subcategory_name": "不公平競爭行為"
+      }
+    ]
+  },
+  {
+    "category_id": 21,
+    "category_name": "海商法",
+    "subcategories": [
+      {
+        "subcategory_id": "21-1",
+        "subcategory_name": "海上運送契約與載貨證券"
+      },
+      {
+        "subcategory_id": "21-2",
+        "subcategory_name": "船舶碰撞與海難救助"
+      },
+      {
+        "subcategory_id": "21-3",
+        "subcategory_name": "船舶所有人責任與海事優先權"
+      },
+      {
+        "subcategory_id": "21-4",
+        "subcategory_name": "海上保險"
+      },
+      {
+        "subcategory_id": "21-5",
+        "subcategory_name": "共同海損"
+      }
+    ]
+  }
+]
