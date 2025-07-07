@@ -67,13 +67,13 @@ onMounted(async () => {
     <div v-if="workspaceStore.isLoading" class="flex items-center justify-center h-64">
       <div class="text-center">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-        <p class="text-gray-500">載入工作區中...</p>
+        <p class="text-gray-500 dark:text-slate-400">載入工作區中...</p>
       </div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="workspaceStore.error" class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg mb-6">
-      <p class="text-red-600 dark:text-red-400">{{ workspaceStore.error }}</p>
+    <div v-else-if="workspaceStore.error" class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg mb-6">
+      <p class="text-red-600 dark:text-red-300">{{ workspaceStore.error }}</p>
     </div>
 
     <!-- Main Content -->
@@ -82,22 +82,22 @@ onMounted(async () => {
       <h1 class="text-2xl font-bold mb-1 text-blue-700 dark:text-blue-300">
         {{ workspaceStore.activeWorkspace.name }}
       </h1>
-      <p class="text-sm text-gray-500 mb-6">
+      <p class="text-sm text-gray-500 dark:text-slate-400 mb-6">
         任務 ID: {{ workspaceStore.activeWorkspace.id }}...
       </p>
 
     <!-- Tab Navigation -->
-    <div class="border-b border-gray-300 dark:border-gray-600 mb-6">
+    <div class="border-b border-gray-300 dark:border-slate-600 mb-6">
       <nav class="-mb-px flex gap-6">
         <button
           @click="activeTab = 'search'"
-          :class="['py-2 px-1 text-sm font-medium border-b-2', activeTab === 'search' ? 'border-blue-700 text-blue-700 dark:text-blue-300' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300']"
+          :class="['py-2 px-1 text-sm font-medium border-b-2', activeTab === 'search' ? 'border-blue-700 text-blue-700 dark:text-blue-300' : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:border-gray-300 dark:hover:border-slate-500']"
         >
           搜尋
         </button>
         <button
           @click="activeTab = 'generate'"
-          :class="['py-2 px-1 text-sm font-medium border-b-2', activeTab === 'generate' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300']"
+          :class="['py-2 px-1 text-sm font-medium border-b-2', activeTab === 'generate' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:border-gray-300 dark:hover:border-slate-500']"
         >
           生成
         </button>
@@ -126,10 +126,10 @@ onMounted(async () => {
     <!-- No Workspace State -->
     <div v-else class="flex items-center justify-center h-64">
       <div class="text-center">
-        <p class="text-gray-500 mb-4">沒有可用的工作區</p>
+        <p class="text-gray-500 dark:text-slate-400 mb-4">沒有可用的工作區</p>
         <button
           @click="workspaceStore.addWorkspace"
-          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
         >
           建立新工作區
         </button>

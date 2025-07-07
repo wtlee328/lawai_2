@@ -454,8 +454,8 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-xl">
         <!-- Title Header -->
         <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 class="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2">
-            <Search class="w-5 h-5 text-blue-600" />
+          <h2 class="text-lg font-semibold text-blue-700 dark:text-blue-300 flex items-center gap-2">
+            <Search class="w-5 h-5 text-blue-700 dark:text-blue-300" />
             裁判書搜索
           </h2>
         </div>
