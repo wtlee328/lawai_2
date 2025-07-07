@@ -67,38 +67,36 @@ onMounted(async () => {
     <div v-if="workspaceStore.isLoading" class="flex items-center justify-center h-64">
       <div class="text-center">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-        <p class="text-gray-500 dark:text-slate-400">載入工作區中...</p>
+        <p class="text-gray-500 dark:text-gray-300">載入工作區中...</p>
       </div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="workspaceStore.error" class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg mb-6">
-      <p class="text-red-600 dark:text-red-300">{{ workspaceStore.error }}</p>
+    <div v-else-if="workspaceStore.error" class="p-4 bg-red-50 dark:bg-gray-800 border border-red-200 dark:border-black rounded-lg mb-6">
+      <p class="text-red-600 dark:text-gray-200">{{ workspaceStore.error }}</p>
     </div>
 
     <!-- Main Content -->
     <div v-else-if="workspaceStore.activeWorkspace" class="h-full flex flex-col">
       <!-- Header -->
-      <h1 class="text-2xl font-bold mb-1 text-blue-700 dark:text-blue-300">
+      <h1 class="text-2xl font-bold mb-1 text-blue-700 dark:text-white">
         {{ workspaceStore.activeWorkspace.name }}
       </h1>
-      <p class="text-sm text-gray-500 dark:text-slate-400 mb-6">
+      <p class="text-sm text-gray-500 dark:text-gray-300 mb-6">
         任務 ID: {{ workspaceStore.activeWorkspace.id }}...
       </p>
 
     <!-- Tab Navigation -->
-    <div class="border-b border-gray-300 dark:border-slate-600 mb-6">
+    <div class="border-b border-gray-300 dark:border-black mb-6">
       <nav class="-mb-px flex gap-6">
         <button
           @click="activeTab = 'search'"
-          :class="['py-2 px-1 text-sm font-medium border-b-2', activeTab === 'search' ? 'border-blue-700 text-blue-700 dark:text-blue-300' : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:border-gray-300 dark:hover:border-slate-500']"
-        >
+          :class="['py-2 px-1 text-sm font-medium border-b-2', activeTab === 'search' ? 'border-blue-700 text-blue-700 dark:text-white' : 'border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-500']">
           搜尋
         </button>
         <button
           @click="activeTab = 'generate'"
-          :class="['py-2 px-1 text-sm font-medium border-b-2', activeTab === 'generate' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:border-gray-300 dark:hover:border-slate-500']"
-        >
+          :class="['py-2 px-1 text-sm font-medium border-b-2', activeTab === 'generate' ? 'border-blue-500 text-blue-600 dark:text-white' : 'border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-500']">
           生成
         </button>
       </nav>
@@ -116,8 +114,8 @@ onMounted(async () => {
           </div>
         </div>
         
-        <!-- Log Display Sidebar -->
-        <div class="w-1/3 min-w-0">
+        <!-- Log Display Sidebar - Only show on search tab -->
+        <div v-show="activeTab === 'search'" class="w-1/3 min-w-0">
           <LogDisplay ref="logDisplayRef" :refinement-steps="refinementSteps" />
         </div>
       </div>
@@ -126,7 +124,7 @@ onMounted(async () => {
     <!-- No Workspace State -->
     <div v-else class="flex items-center justify-center h-64">
       <div class="text-center">
-        <p class="text-gray-500 dark:text-slate-400 mb-4">沒有可用的工作區</p>
+        <p class="text-gray-500 dark:text-gray-300 mb-4">沒有可用的工作區</p>
         <button
           @click="workspaceStore.addWorkspace"
           class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
@@ -156,7 +154,7 @@ onMounted(async () => {
       </div>
       
       <!-- Expanded Chat Window -->
-      <div v-else class="bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 w-96 h-96 flex flex-col">
+      <div v-else class="bg-white dark:bg-gray-900 rounded-lg shadow-xl border border-gray-200 dark:border-black w-96 h-96 flex flex-col">
         <!-- Chat Header -->
         <div class="bg-blue-600 text-white p-4 rounded-t-lg flex items-center justify-between">
           <div class="flex items-center gap-2">
@@ -172,16 +170,16 @@ onMounted(async () => {
         
         <!-- Chat Content -->
         <div class="flex-1 p-4 overflow-y-auto">
-          <div class="text-center text-gray-500 dark:text-gray-400 text-sm">
+          <div class="text-center text-gray-500 dark:text-gray-300 text-sm">
             對話功能開發中...
           </div>
         </div>
         
         <!-- Chat Input -->
-        <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+        <div class="p-4 border-t border-gray-200 dark:border-black">
           <div class="flex gap-2">
             <input type="text" placeholder="輸入訊息..." 
-                   class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" 
+                   class="flex-1 px-3 py-2 border border-gray-300 dark:border-black rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white" 
                    disabled />
             <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors" disabled>
               發送

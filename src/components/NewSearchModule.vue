@@ -4,6 +4,18 @@ import { Search } from 'lucide-vue-next';
 import { useWorkspaceStore } from '../store/workspace';
 import { useAuthStore } from '../store/auth';
 
+// Import number SVG icons
+import icon0 from '../assets/0.svg';
+import icon1 from '../assets/1.svg';
+import icon2 from '../assets/2.svg';
+import icon3 from '../assets/3.svg';
+import icon4 from '../assets/4.svg';
+import icon5 from '../assets/5.svg';
+import icon6 from '../assets/6.svg';
+import icon7 from '../assets/7.svg';
+import icon8 from '../assets/8.svg';
+import icon9 from '../assets/9.svg';
+
 const workspaceStore = useWorkspaceStore();
 const authStore = useAuthStore();
 const searchQuery = ref('');
@@ -20,6 +32,22 @@ const availableSearchMethods = [
   { value: 'keyword', label: '關鍵字搜尋', description: '精確的關鍵字匹配搜尋' },
   { value: 'category', label: '類別搜尋', description: '按法律類別分類搜尋' }
 ];
+
+// Number icon mapping
+const numberIcons = [icon0, icon1, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9];
+
+// Function to get number icons for relevance score
+const getRelevanceIcons = (score: number) => {
+  const percentage = Math.round(score * 100);
+  const digits = percentage.toString().split('').map(Number);
+  return digits.map(digit => numberIcons[digit]);
+};
+
+// Function to get number icons for ranking
+const getRankingIcons = (rank: number) => {
+  const digits = rank.toString().split('').map(Number);
+  return digits.map(digit => numberIcons[digit]);
+};
 
 // Task-specific UI state cache to preserve UI across task switches
 const taskUIStateCache = ref(new Map());
@@ -451,11 +479,11 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
     <!-- Enhanced Search Input Container -->
     <div class="mb-6">
       <!-- Input Box with Integrated Title -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-xl">
+      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-0 overflow-hidden transition-all duration-300 hover:shadow-xl">
         <!-- Title Header -->
-        <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 class="text-lg font-semibold text-blue-700 dark:text-blue-300 flex items-center gap-2">
-            <Search class="w-5 h-5 text-blue-700 dark:text-blue-300" />
+      <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-800 px-6 py-4 border-b border-gray-200 dark:border-0">
+          <h2 class="text-lg font-semibold text-blue-700 dark:text-white flex items-center gap-2">
+            <Search class="w-5 h-5 text-blue-700 dark:text-white" />
             裁判書搜索
           </h2>
         </div>
@@ -475,7 +503,7 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
 快捷鍵：Ctrl/Cmd + Enter 搜尋"
             @keydown="handleKeydown"
             :rows="textareaRows"
-            class="w-full pl-6 pr-20 py-4 bg-transparent border-0 focus:outline-none resize-none text-sm leading-relaxed text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+            class="w-full pl-6 pr-20 py-4 bg-transparent border-0 focus:outline-none resize-none text-sm leading-relaxed text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-300"
           ></textarea>
           
           <!-- Height Resize Handle -->
@@ -489,9 +517,9 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
           >
             <!-- Diagonal lines pattern -->
             <svg class="w-full h-full" viewBox="0 0 16 16" fill="none">
-              <path d="M16 0L0 16" stroke="currentColor" stroke-width="1" class="text-gray-400 dark:text-gray-500" />
-              <path d="M16 6L6 16" stroke="currentColor" stroke-width="1" class="text-gray-400 dark:text-gray-500" />
-              <path d="M16 12L12 16" stroke="currentColor" stroke-width="1" class="text-gray-400 dark:text-gray-500" />
+              <path d="M16 0L0 16" stroke="currentColor" stroke-width="1" class="text-gray-400 dark:text-gray-400" />
+              <path d="M16 6L6 16" stroke="currentColor" stroke-width="1" class="text-gray-400 dark:text-gray-400" />
+              <path d="M16 12L12 16" stroke="currentColor" stroke-width="1" class="text-gray-400 dark:text-gray-400" />
             </svg>
           </div>
           
@@ -507,7 +535,7 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
               :class="[
                 'p-2 rounded-full font-semibold transition-all duration-200 flex items-center justify-center shadow-md w-10 h-10',
                 !canSearch
-                  ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                  ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-300 cursor-not-allowed'
                   : 'bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
               ]"
             >
@@ -517,10 +545,10 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
         </div>
         
         <!-- Footer: Character Count, Search Mode & Tips -->
-        <div class="px-6 py-3 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-600">
+        <div class="px-6 py-3 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-0">
           <!-- Top row: Character count and search mode -->
           <div class="flex justify-between items-center mb-3">
-            <span class="font-medium text-gray-500 dark:text-gray-400 text-xs">
+            <span class="font-medium text-gray-500 dark:text-gray-300 text-xs">
               字數：{{ displayCount }}
               <span v-if="isOverLimit" class="ml-2 text-red-500">已達字數上限</span>
             </span>
@@ -535,7 +563,7 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
                     'px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200',
                     selectedSearchMethod === method.value
                       ? 'bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-sm'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-700'
+                      : 'text-gray-600 dark:text-gray-200 hover:text-blue-600 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-gray-600'
                   ]"
                   :title="method.description"
                 >
@@ -553,28 +581,28 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
     <!-- Search Results -->
     <div v-if="searchResult && !isLoading" class="mt-6">
       <!-- Error State -->
-      <div v-if="searchResult.error" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-red-200 dark:border-red-700 overflow-hidden">
-        <div class="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 px-6 py-4 border-b border-red-200 dark:border-red-700">
-          <h3 class="text-lg font-semibold text-red-700 dark:text-red-300 flex items-center gap-2">
+      <div v-if="searchResult.error" class="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-red-200 dark:border-0 overflow-hidden">
+        <div class="bg-gradient-to-r from-red-50 to-pink-50 dark:from-gray-800 dark:to-gray-800 px-6 py-4 border-b border-red-200 dark:border-0">
+          <h3 class="text-lg font-semibold text-red-700 dark:text-white flex items-center gap-2">
             <div class="w-3 h-3 bg-red-500 rounded-full"></div>
             搜索錯誤
           </h3>
         </div>
         <div class="p-6">
-          <p class="text-red-600 dark:text-red-400">{{ searchResult.message }}</p>
+          <p class="text-red-600 dark:text-gray-200">{{ searchResult.message }}</p>
         </div>
       </div>
       
       <!-- Success Results -->
-      <div v-else class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div v-else class="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-0 overflow-hidden">
         <!-- Results Header -->
-        <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-800 px-6 py-4 border-b border-gray-200 dark:border-0">
           <div class="flex justify-between items-center">
-            <h3 class="text-lg font-semibold text-blue-700 dark:text-blue-300 flex items-center gap-2">
+            <h3 class="text-lg font-semibold text-blue-700 dark:text-white flex items-center gap-2">
               <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
               搜索結果
             </h3>
-            <span class="text-sm text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 px-3 py-1 rounded-full">
+            <span class="text-sm text-blue-600 dark:text-gray-200 bg-blue-100 dark:bg-gray-700 px-3 py-1 rounded-full">
               共找到 {{ searchResult.total_count }} 個結果
             </span>
           </div>
@@ -585,25 +613,25 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
           <div v-if="searchResult.results && searchResult.results.length > 0" class="space-y-6">
             <div v-for="(result, index) in searchResult.results" :key="result.case_id" :class="{
               // Added to doc gen styles (highest priority)
-              'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-600 ring-2 ring-green-200 dark:ring-green-700': result.added_to_doc_gen === 'y',
+              'bg-green-50 dark:bg-gray-800 border-green-300 dark:border-0 ring-2 ring-green-200 dark:ring-gray-500': result.added_to_doc_gen === 'y',
               // Regular relevance-based styles
-              'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) > 90,
-              'bg-blue-100 bg-opacity-60 dark:bg-blue-900/15 border-blue-100 dark:border-blue-800': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) >= 85 && Math.round(result.relevance_score * 100) <= 90,
-              'bg-blue-100 bg-opacity-30 dark:bg-blue-900/10 border-blue-100 border-opacity-50 dark:border-blue-900': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) >= 80 && Math.round(result.relevance_score * 100) < 85,
-              'bg-gray-50 dark:bg-gray-800/20 border-gray-200 dark:border-gray-700': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) < 80
+              'bg-blue-50 dark:bg-gray-800 border-blue-200 dark:border-0': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) > 90,
+              'bg-blue-100 bg-opacity-60 dark:bg-gray-800 border-blue-100 dark:border-0': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) >= 85 && Math.round(result.relevance_score * 100) <= 90,
+              'bg-blue-100 bg-opacity-30 dark:bg-gray-800 border-blue-100 border-opacity-50 dark:border-0': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) >= 80 && Math.round(result.relevance_score * 100) < 85,
+              'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-0': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) < 80
             }" class="p-6 rounded-lg hover:shadow-md transition-all duration-200 border relative">
               <!-- Case Header -->
               <div class="flex justify-between items-start mb-4">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 mb-1">
-                    <h4 class="font-semibold text-lg text-gray-800 dark:text-gray-200">
+                    <h4 class="font-semibold text-lg text-gray-800 dark:text-white">
                       {{ result.title || result.case_number }}
                     </h4>
-                    <span v-if="result.added_to_doc_gen === 'y'" class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full font-medium">
+                    <span v-if="result.added_to_doc_gen === 'y'" class="text-xs bg-green-100 dark:bg-gray-700 text-green-700 dark:text-gray-200 px-2 py-1 rounded-full font-medium">
                       ✓ 已加入文件生成
                     </span>
                   </div>
-                  <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                  <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
                     <span class="flex items-center gap-1">
                       <div class="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
                       {{ result.court }}
@@ -611,25 +639,26 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
                     <span v-if="result.date_decided">
                       {{ new Date(result.date_decided).toLocaleDateString('zh-TW') }}
                     </span>
-                    <span class="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-1 rounded">
+                    <span class="text-xs bg-blue-100 dark:bg-gray-700 text-blue-600 dark:text-gray-200 px-2 py-1 rounded">
                       {{ result.search_method }}
                     </span>
                   </div>
                 </div>
                 <div class="flex items-center gap-2 ml-4">
                   <div class="text-right">
-                    <div class="text-xs text-gray-500 dark:text-gray-400">相關性</div>
-                    <div class="text-sm font-semibold text-blue-500 dark:text-blue-400">
+                    <div class="text-xs text-gray-500 dark:text-gray-300">相關性</div>
+                    <div class="text-sm font-semibold text-blue-500 dark:text-gray-200">
                       {{ Math.round(result.relevance_score * 100) }}%
                     </div>
                   </div>
-                  <div :class="{
-                    'bg-gradient-to-r from-blue-500 to-blue-700': Math.round(result.relevance_score * 100) > 90,
-                    'bg-gradient-to-r from-blue-400 to-blue-600': Math.round(result.relevance_score * 100) >= 85 && Math.round(result.relevance_score * 100) <= 90,
-                    'bg-gradient-to-r from-blue-300 to-blue-500': Math.round(result.relevance_score * 100) >= 80 && Math.round(result.relevance_score * 100) < 85,
-                    'bg-gradient-to-r from-blue-200 to-blue-400': Math.round(result.relevance_score * 100) < 80
-                  }" class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                    {{ index + 1 }}
+                  <div class="flex items-center gap-0">
+                    <img 
+                      v-for="(icon, iconIndex) in getRankingIcons(index + 1)" 
+                      :key="iconIndex" 
+                      :src="icon" 
+                      alt="" 
+                      class="w-6 h-6"
+                    />
                   </div>
                 </div>
               </div>
@@ -637,13 +666,13 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
               <!-- Case Content -->
               <div class="space-y-3">
                 <div v-if="result.summary" :class="{
-                   'border-blue-200 dark:border-blue-700': Math.round(result.relevance_score * 100) > 90,
-                   'border-blue-100 dark:border-blue-800': Math.round(result.relevance_score * 100) >= 85 && Math.round(result.relevance_score * 100) <= 90,
-                   'border-blue-50 dark:border-blue-900': Math.round(result.relevance_score * 100) >= 80 && Math.round(result.relevance_score * 100) < 85,
-                   'border-gray-200 dark:border-gray-700': Math.round(result.relevance_score * 100) < 80
-                 }" class="bg-white dark:bg-gray-800 p-4 rounded-lg border mb-4">
-                  <div class="text-xs text-gray-500 dark:text-gray-400 mb-2">案件摘要</div>
-                  <p class="text-gray-900 dark:text-gray-100 text-sm leading-relaxed">
+                   'border-blue-200 dark:border-gray-500': Math.round(result.relevance_score * 100) > 90,
+                   'border-blue-100 dark:border-gray-500': Math.round(result.relevance_score * 100) >= 85 && Math.round(result.relevance_score * 100) <= 90,
+                   'border-blue-50 dark:border-gray-500': Math.round(result.relevance_score * 100) >= 80 && Math.round(result.relevance_score * 100) < 85,
+                   'border-gray-200 dark:border-gray-500': Math.round(result.relevance_score * 100) < 80
+                 }" class="bg-white dark:bg-gray-900 p-4 rounded-lg border mb-4">
+                  <div class="text-xs text-gray-500 dark:text-gray-300 mb-2">案件摘要</div>
+                  <p class="text-gray-900 dark:text-white text-sm leading-relaxed">
                     {{ result.summary }}
                   </p>
                 </div>
@@ -651,14 +680,14 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
               
               <!-- Case Actions -->
               <div :class="{
-                'border-t-green-200 dark:border-t-green-700': result.added_to_doc_gen === 'y',
-                'border-t-blue-200 dark:border-t-blue-700': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) > 90,
-                'border-t-blue-100 dark:border-t-blue-800': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) >= 85 && Math.round(result.relevance_score * 100) <= 90,
-                'border-t-blue-50 dark:border-t-blue-900': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) >= 80 && Math.round(result.relevance_score * 100) < 85,
-                'border-t-gray-200 dark:border-t-gray-700': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) < 80
+                'border-t-green-200 dark:border-t-gray-500': result.added_to_doc_gen === 'y',
+                'border-t-blue-200 dark:border-t-gray-500': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) > 90,
+                'border-t-blue-100 dark:border-t-gray-500': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) >= 85 && Math.round(result.relevance_score * 100) <= 90,
+                'border-t-blue-50 dark:border-t-gray-500': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) >= 80 && Math.round(result.relevance_score * 100) < 85,
+                'border-t-gray-200 dark:border-t-gray-500': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) < 80
               }" class="mt-4 pt-4 border-t">
                 <div class="flex justify-between items-center">
-                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                  <div class="text-xs text-gray-500 dark:text-gray-300">
                     案件編號：{{ result.case_id }}
                   </div>
                   <div class="flex items-center gap-3">
@@ -666,7 +695,7 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
                       @click="toggleAddToDocGen(index)"
                       :class="{
                         'bg-green-500 hover:bg-green-600 text-white': result.added_to_doc_gen === 'y',
-                        'bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-200': result.added_to_doc_gen !== 'y'
+                        'bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200': result.added_to_doc_gen !== 'y'
                       }"
                       class="text-sm font-medium px-3 py-1.5 rounded-lg transition-colors duration-200 flex items-center gap-1"
                     >
@@ -674,7 +703,7 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
                       <span v-else>+</span>
                       {{ result.added_to_doc_gen === 'y' ? '已加入文件生成' : '加入到文件生成' }}
                     </button>
-                    <a :href="generateJudicialUrl(result.case_id, result.date_decided)" target="_blank" class="text-sm font-medium text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-500 hover:underline">
+                    <a :href="generateJudicialUrl(result.case_id, result.date_decided)" target="_blank" class="text-sm font-medium text-blue-500 dark:text-gray-200 hover:text-blue-600 dark:hover:text-white hover:underline">
                       查看詳情 →
                     </a>
                   </div>
@@ -685,7 +714,7 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
           
           <!-- No Results -->
           <div v-else class="text-center py-12">
-            <div class="text-gray-400 dark:text-gray-500 mb-4">
+            <div class="text-gray-400 dark:text-gray-300 mb-4">
               <Search class="w-16 h-16 mx-auto mb-4 opacity-50" />
               <p class="text-lg font-medium">沒有找到相關結果</p>
               <p class="text-sm mt-2">請嘗試使用不同的關鍵詞或調整搜索條件</p>

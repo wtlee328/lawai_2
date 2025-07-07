@@ -1,9 +1,18 @@
 <template>
-  <div class="log-display p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-lg" :class="isExpanded ? 'min-h-[22.2rem] max-h-screen overflow-hidden' : 'h-[22.2rem] overflow-hidden'">
+  <div class="log-display relative p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-black rounded-xl shadow-lg" :class="isExpanded ? 'min-h-[22.2rem] max-h-screen overflow-hidden' : 'h-[22.2rem] overflow-hidden'">
+    <!-- WebSocket 連線狀態指示器 -->
+    <div class="absolute bottom-6 left-6 flex items-center space-x-2 text-xs">
+      <div class="w-2 h-2 rounded-full" :class="{
+        'bg-green-500 animate-pulse': connectionStatus === '連接已建立',
+        'bg-red-500': connectionStatus === '連接已斷開' || connectionStatus === '連接錯誤',
+        'bg-gray-400': connectionStatus === '未連接'
+      }"></div>
+      <span class="text-gray-500 dark:text-gray-400">{{ connectionStatus }}</span>
+    </div>
     <div class="flex items-center justify-between mb-6">
       <div class="flex items-center space-x-3">
         <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
-        <h3 class="text-xl text-blue-700 dark:text-blue-300">搜索進度</h3>
+        <h3 class="text-xl text-blue-700 dark:text-white">搜索進度</h3>
       </div>
       <button
         v-if="searchSteps.length > 0"
@@ -18,19 +27,17 @@
     <div v-if="!isExpanded" class="space-y-4">
       <!-- Empty State -->
       <div v-if="searchSteps.length === 0" class="text-center py-8">
-        <div class="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-6 h-6 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-          </svg>
+        <div class="flex justify-center mx-auto mb-0">
+          <img src="/src/assets/polarbear.svg" alt="Polar Bear" class="w-28 h-28 object-contain" />
         </div>
-        <p class="text-gray-500 dark:text-gray-400 text-sm">等待搜索開始...</p>
+        <p class="text-gray-500 dark:text-gray-300 text-sm">等待搜索開始...</p>
       </div>
 
       <!-- Latest Step -->
       <div v-if="latestStep" class="transform transition-all duration-500 ease-out">
         <div class="flex items-start space-x-4 p-4 rounded-xl" :class="{
-          'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700': latestStep.status === 'processing',
-          'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700': latestStep.status === 'completed',
+          'bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-gray-500': latestStep.status === 'processing',
+          'bg-green-50 dark:bg-gray-700 border border-green-200 dark:border-gray-500': latestStep.status === 'completed',
           'bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700': latestStep.status === 'pending'
         }">
           <!-- Step Icon -->
@@ -50,8 +57,8 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-center space-x-2 mb-1">
               <h4 class="text-sm font-semibold" :class="{
-                'text-blue-700 dark:text-blue-300': latestStep.status === 'processing',
-                'text-green-700 dark:text-green-300': latestStep.status === 'completed',
+                'text-blue-700 dark:text-gray-200': latestStep.status === 'processing',
+            'text-green-700 dark:text-gray-200': latestStep.status === 'completed',
                 'text-gray-500 dark:text-gray-400': latestStep.status === 'pending'
               }">{{ latestStep.title }}</h4>
               <span v-if="latestStep.duration" class="text-xs text-gray-500 dark:text-gray-400">
@@ -59,8 +66,8 @@
               </span>
             </div>
             <p class="text-sm break-words overflow-wrap-anywhere" :class="{
-              'text-blue-600 dark:text-blue-400': latestStep.status === 'processing',
-              'text-green-600 dark:text-green-400': latestStep.status === 'completed',
+              'text-blue-600 dark:text-white': latestStep.status === 'processing',
+            'text-green-600 dark:text-white': latestStep.status === 'completed',
               'text-gray-500 dark:text-gray-400': latestStep.status === 'pending'
             }">{{ latestStep.description }}</p>
           </div>
@@ -82,13 +89,13 @@
 
     <!-- Expanded View: Show all steps -->
     <div v-else class="space-y-4 overflow-y-auto custom-scrollbar" :style="{ maxHeight: 'calc(100vh - 200px)' }">
-      <div v-for="(step, index) in searchSteps" :key="index" class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+      <div v-for="(step, index) in searchSteps" :key="index" class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 shadow-sm">
         <div class="flex items-start space-x-4">
           <!-- Step Number -->
           <div class="flex-shrink-0">
             <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold" :class="{
-              'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300': step.status === 'processing',
-              'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300': step.status === 'completed',
+              'bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-gray-200': step.status === 'processing',
+           'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-gray-200': step.status === 'completed',
               'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400': step.status === 'pending'
             }">
               {{ index + 1 }}
@@ -104,8 +111,8 @@
                   {{ step.duration }}ms
                 </span>
                 <span class="text-xs px-2 py-1 rounded-full" :class="{
-                  'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300': step.status === 'processing',
-                  'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300': step.status === 'completed',
+                  'bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-gray-200': step.status === 'processing',
+             'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-gray-200': step.status === 'completed',
                   'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400': step.status === 'pending'
                 }">
                   {{ step.status === 'processing' ? '進行中' : step.status === 'completed' ? '已完成' : '等待中' }}
@@ -113,25 +120,25 @@
               </div>
             </div>
             
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 break-words overflow-wrap-anywhere">{{ step.description }}</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 break-words overflow-wrap-anywhere">{{ step.description }}</p>
             
             <!-- Detailed Information -->
             <div v-if="step.details" class="space-y-2">
               <div v-if="step.details.method" class="text-xs">
                 <span class="font-medium text-gray-700 dark:text-gray-300">搜索方法:</span>
-                <span class="ml-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded">{{ step.details.method }}</span>
+                <span class="ml-2 bg-blue-50 dark:bg-gray-700 text-blue-700 dark:text-gray-200 px-2 py-1 rounded">{{ step.details.method }}</span>
               </div>
               <div v-if="step.details.query" class="text-xs">
                 <span class="font-medium text-gray-700 dark:text-gray-300">查詢內容:</span>
-                <span class="ml-2 text-gray-600 dark:text-gray-400 font-mono bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded">{{ step.details.query }}</span>
+                <span class="ml-2 text-gray-600 dark:text-gray-200 font-mono bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded">{{ step.details.query }}</span>
               </div>
               <div v-if="step.details.count !== undefined" class="text-xs">
                 <span class="font-medium text-gray-700 dark:text-gray-300">結果數量:</span>
-                <span class="ml-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 px-2 py-1 rounded">{{ step.details.count }} 筆</span>
+                <span class="ml-2 bg-green-50 dark:bg-gray-700 text-green-700 dark:text-gray-200 px-2 py-1 rounded">{{ step.details.count }} 筆</span>
               </div>
               <div v-if="step.details.error" class="text-xs">
-                <span class="font-medium text-red-700 dark:text-red-300">錯誤信息:</span>
-                <span class="ml-2 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded">{{ step.details.error }}</span>
+                <span class="font-medium text-red-700 dark:text-gray-200">錯誤信息:</span>
+                <span class="ml-2 text-red-600 dark:text-gray-200 bg-red-50 dark:bg-gray-700 px-2 py-1 rounded">{{ step.details.error }}</span>
               </div>
             </div>
           </div>
@@ -139,11 +146,7 @@
       </div>
     </div>
 
-    <!-- Enhanced Connection Status -->
-    <div v-if="connectionStatus" class="mt-6 flex items-center space-x-2">
-      <div class="w-2 h-2 rounded-full" :class="connectionStatus.includes('已建立') ? 'bg-green-500 animate-pulse' : 'bg-red-500'"></div>
-      <span class="text-xs text-gray-500 dark:text-gray-400">{{ connectionStatus }}</span>
-    </div>
+
   </div>
 </template>
 

@@ -26,21 +26,21 @@ const handleSignup = async () => {
 </script>
 
 <template>
-  <div class="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-900">
-    <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-lg dark:bg-gray-800">
+  <div class="flex h-screen items-center justify-center bg-gray-100 dark:bg-black">
+    <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-lg dark:bg-gray-900">
       <h2 class="text-2xl font-bold text-center text-gray-800 dark:text-white">Lawai 登入</h2>
       
       <div class="mt-6">
-        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">電子郵件地址</label>
-        <input v-model="email" id="email" type="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200">電子郵件地址</label>
+        <input v-model="email" id="email" type="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-500 dark:text-white">
       </div>
       
       <div class="mt-4">
-        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">密碼</label>
-        <input v-model="password" id="password" type="password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-200">密碼</label>
+        <input v-model="password" id="password" type="password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-500 dark:text-white">
       </div>
 
-      <div v-if="authStore.error" class="mt-4 text-sm text-red-600">
+      <div v-if="authStore.error" class="mt-4 text-sm text-red-600 dark:text-gray-200">
         {{ authStore.error.message }}
       </div>
 

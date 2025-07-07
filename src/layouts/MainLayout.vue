@@ -106,9 +106,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="flex h-screen w-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white">
+  <div class="flex h-screen w-full bg-gray-100 dark:bg-black text-gray-800 dark:text-white">
     <!-- Sidebar -->
-    <aside class="w-64 flex-shrink-0 bg-white dark:bg-gray-900 flex flex-col p-4 border-r border-gray-200 dark:border-gray-700 relative">
+    <aside class="w-64 flex-shrink-0 bg-white dark:bg-gray-900 flex flex-col p-4 border-r border-gray-200 dark:border-0 relative">
       <!-- Logo and Theme Toggle -->
       <div class="flex items-center justify-between mb-8">
         <img :src="lawaiLogo" alt="Lawai Logo" class="h-10" />
@@ -130,14 +130,14 @@ onUnmounted(() => {
               class="p-2 rounded-md cursor-pointer flex items-center justify-between group"
               :class="{
                 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold': ws.id === workspaceStore.activeWorkspaceId,
-                'hover:bg-gray-200 dark:hover:bg-gray-700': ws.id !== workspaceStore.activeWorkspaceId
+                'hover:bg-gray-200 dark:hover:bg-gray-800': ws.id !== workspaceStore.activeWorkspaceId
               }"
             >
               <span class="truncate">{{ ws.name }}</span>
               <div class="flex items-center gap-1">
                 <button
                   @click.stop="startEditingName(ws)"
-                  class="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-opacity"
+                  class="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-gray-300 dark:hover:bg-gray-700 transition-opacity"
                   :class="{
                     'hover:bg-blue-700': ws.id === workspaceStore.activeWorkspaceId
                   }"
@@ -159,12 +159,12 @@ onUnmounted(() => {
             </div>
             
             <!-- Editing mode -->
-            <div v-else class="p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex items-center gap-1">
+            <div v-else class="p-2 rounded-md bg-gray-100 dark:bg-gray-800 flex items-center gap-1">
               <input
                 v-model="editingName"
                 @keyup.enter="saveWorkspaceName"
                 @keyup.escape="cancelEditing"
-                class="flex-1 px-2 py-1 text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                class="flex-1 px-2 py-1 text-xs rounded border border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 autofocus
               />
               <button
@@ -184,7 +184,7 @@ onUnmounted(() => {
         </ul>
         <button
           @click="workspaceStore.addWorkspace"
-          class="w-full mt-2 p-2 flex items-center justify-center text-sm rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          class="w-full mt-2 p-2 flex items-center justify-center text-sm rounded-md hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
         >
           <PlusSquare class="w-4 h-4 mr-2" />
           新增任務
@@ -192,10 +192,10 @@ onUnmounted(() => {
       </nav>
 
       <!-- User Info & Controls section -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 relative">
+      <div class="absolute bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-600 relative">
         <!-- User Info with Dropdown -->
          <div class="relative user-menu-container">
-          <button @click="toggleUserMenu" class="w-full flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+          <button @click="toggleUserMenu" class="w-full flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
             <div class="w-8 h-8 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white font-semibold text-xs flex-shrink-0">
               {{ authStore.user?.email?.charAt(0).toUpperCase() || 'U' }}
             </div>
@@ -203,7 +203,7 @@ onUnmounted(() => {
               <div class="text-sm font-medium text-gray-900 dark:text-white truncate">
                 {{ authStore.user?.email || '訪客用戶' }}
               </div>
-              <div class="text-xs text-gray-500 dark:text-gray-400">
+              <div class="text-xs text-gray-500 dark:text-gray-300">
                 {{ authStore.isAuthenticated ? '已登入' : '未登入' }}
               </div>
             </div>
@@ -214,12 +214,12 @@ onUnmounted(() => {
           </button>
           
           <!-- Dropdown Menu -->
-          <div v-if="showUserMenu" class="absolute bottom-full left-0 right-0 mb-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1">
-            <button @click="handleUserCenter" class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
+          <div v-if="showUserMenu" class="absolute bottom-full left-0 right-0 mb-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg py-1">
+            <button @click="handleUserCenter" class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
               <User class="w-4 h-4" />
               <span>使用者中心</span>
             </button>
-            <button @click="handleLogoutFromMenu" class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
+            <button @click="handleLogoutFromMenu" class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
               <LogOut class="w-4 h-4" />
               <span>登出</span>
             </button>
