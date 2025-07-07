@@ -143,7 +143,7 @@ onMounted(async () => {
       <!-- Collapsed Chat Button -->
       <div v-if="!isChatExpanded" 
            @click="toggleChat"
-           class="relative bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg cursor-pointer transition-all duration-300 hover:scale-105 flex items-center gap-3">
+           class="relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full p-4 shadow-lg cursor-pointer transition-all duration-300 hover:scale-105 flex items-center gap-3">
         <!-- Wave Animation Background -->
         <div v-if="isRobotAnimating" class="absolute inset-0 rounded-full">
           <div class="absolute inset-0 rounded-full bg-blue-400 opacity-30 animate-ping"></div>

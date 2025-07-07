@@ -1,5 +1,5 @@
 <template>
-  <div class="log-display p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-lg" :class="isExpanded ? 'min-h-80 max-h-screen overflow-hidden' : 'h-80 overflow-hidden'">
+  <div class="log-display p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-lg" :class="isExpanded ? 'min-h-[22.2rem] max-h-screen overflow-hidden' : 'h-[22.2rem] overflow-hidden'">
     <div class="flex items-center justify-between mb-6">
       <div class="flex items-center space-x-3">
         <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
@@ -73,8 +73,8 @@
           <span class="text-sm font-medium text-gray-700 dark:text-gray-300">整體進度</span>
           <span class="text-sm text-gray-500 dark:text-gray-400">{{ completedSteps }}/{{ totalSteps }}</span>
         </div>
-        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-          <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-500" 
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+          <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500" 
                :style="{ width: progressPercentage + '%' }"></div>
         </div>
       </div>

@@ -12,6 +12,15 @@ const searchResult = ref<any>(null);
 const inputRef = ref<HTMLInputElement | null>(null);
 const emit = defineEmits(['update:search-progress']);
 
+// Search mode selection
+const selectedSearchMethod = ref('hybrid');
+const availableSearchMethods = [
+  { value: 'hybrid', label: '混合搜尋', description: '結合語意和關鍵字搜尋' },
+  { value: 'semantic', label: '語意搜尋', description: '基於語意理解的智能搜尋' },
+  { value: 'keyword', label: '關鍵字搜尋', description: '精確的關鍵字匹配搜尋' },
+  { value: 'category', label: '類別搜尋', description: '按法律類別分類搜尋' }
+];
+
 // Task-specific UI state cache to preserve UI across task switches
 const taskUIStateCache = ref(new Map());
 
@@ -24,13 +33,15 @@ onMounted(async () => {
     const cachedState = taskUIStateCache.value.get(currentTaskId);
     searchQuery.value = cachedState.searchQuery;
     searchResult.value = cachedState.searchResult;
+    selectedSearchMethod.value = cachedState.selectedSearchMethod || 'hybrid';
   } else {
     // Load from database and cache the result
     await loadSearchState();
     if (currentTaskId && (searchResult.value || searchQuery.value)) {
       taskUIStateCache.value.set(currentTaskId, {
         searchQuery: searchQuery.value,
-        searchResult: searchResult.value
+        searchResult: searchResult.value,
+        selectedSearchMethod: selectedSearchMethod.value
       });
     }
   }
@@ -53,9 +64,10 @@ watch(() => workspaceStore.activeTaskId, async (newTaskId, oldTaskId) => {
     // Save current task's UI state before switching
     if (oldTaskId && (searchResult.value || searchQuery.value)) {
       taskUIStateCache.value.set(oldTaskId, {
-        searchQuery: searchQuery.value,
-        searchResult: searchResult.value
-      });
+          searchQuery: searchQuery.value,
+          searchResult: searchResult.value,
+          selectedSearchMethod: selectedSearchMethod.value
+        });
     }
     
     // Try to restore UI state from cache first
@@ -63,6 +75,7 @@ watch(() => workspaceStore.activeTaskId, async (newTaskId, oldTaskId) => {
       const cachedState = taskUIStateCache.value.get(newTaskId);
       searchQuery.value = cachedState.searchQuery;
       searchResult.value = cachedState.searchResult;
+      selectedSearchMethod.value = cachedState.selectedSearchMethod || 'hybrid';
     } else {
       // Only load from database if no cached state exists
       await loadSearchState();
@@ -169,7 +182,8 @@ async function toggleAddToDocGen(index: number) {
       if (workspaceStore.activeTaskId) {
         taskUIStateCache.value.set(workspaceStore.activeTaskId, {
           searchQuery: searchQuery.value,
-          searchResult: searchResult.value
+          searchResult: searchResult.value,
+          selectedSearchMethod: selectedSearchMethod.value
         });
       }
     }
@@ -207,7 +221,7 @@ function handleInput(event: Event) {
 
 // Computed property for search button state
 const canSearch = computed(() => {
-  return !isLoading.value && searchQuery.value.trim().length > 0;
+  return !isLoading.value && searchQuery.value.trim().length > 0 && selectedSearchMethod.value !== '';
 });
 
 
@@ -279,7 +293,7 @@ async function handleSearch() {
         },
         body: JSON.stringify({
           query: searchQuery.value,
-          search_methods: ['hybrid'],
+          search_methods: [selectedSearchMethod.value],
           filters: {},
           limit: 10
         })
@@ -331,7 +345,8 @@ async function handleSearch() {
           // Update cache with new search results
           taskUIStateCache.value.set(workspaceStore.activeTaskId, {
             searchQuery: searchQuery.value,
-            searchResult: searchResult.value
+            searchResult: searchResult.value,
+            selectedSearchMethod: selectedSearchMethod.value
           });
         }
         
@@ -493,7 +508,7 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
                 'p-2 rounded-full font-semibold transition-all duration-200 flex items-center justify-center shadow-md w-10 h-10',
                 !canSearch
                   ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
+                  : 'bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
               ]"
             >
               <Search class="w-5 h-5" />
@@ -501,14 +516,33 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
           </div>
         </div>
         
-        <!-- Footer: Character Count & Tips (when expanded) -->
+        <!-- Footer: Character Count, Search Mode & Tips -->
         <div class="px-6 py-3 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-600">
-          <div class="flex justify-between items-center text-xs">
-            <span class="font-medium text-gray-500 dark:text-gray-400">
+          <!-- Top row: Character count and search mode -->
+          <div class="flex justify-between items-center mb-3">
+            <span class="font-medium text-gray-500 dark:text-gray-400 text-xs">
               字數：{{ displayCount }}
               <span v-if="isOverLimit" class="ml-2 text-red-500">已達字數上限</span>
             </span>
-            <span class="hidden sm:inline text-gray-500 dark:text-gray-400">提示：使用 Ctrl/Cmd + Enter 快速搜尋</span>
+            <!-- Search Mode Selection -->
+             <div class="flex items-center gap-2">
+               <div class="inline-flex bg-gray-200 dark:bg-gray-700 rounded-lg p-1 gap-1">
+                <button
+                  v-for="method in availableSearchMethods" 
+                  :key="method.value"
+                  @click="selectedSearchMethod = method.value"
+                  :class="[
+                    'px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200',
+                    selectedSearchMethod === method.value
+                      ? 'bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-700'
+                  ]"
+                  :title="method.description"
+                >
+                  {{ method.label }}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
