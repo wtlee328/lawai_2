@@ -36,13 +36,6 @@ const availableSearchMethods = [
 // Number icon mapping
 const numberIcons = [icon0, icon1, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9];
 
-// Function to get number icons for relevance score
-const getRelevanceIcons = (score: number) => {
-  const percentage = Math.round(score * 100);
-  const digits = percentage.toString().split('').map(Number);
-  return digits.map(digit => numberIcons[digit]);
-};
-
 // Function to get number icons for ranking
 const getRankingIcons = (rank: number) => {
   const digits = rank.toString().split('').map(Number);
