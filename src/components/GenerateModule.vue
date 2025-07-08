@@ -262,6 +262,15 @@ const emit = defineEmits<{
   'cases-selection-changed': []
 }>()
 
+// 定義案例介面
+interface CaseItem {
+  case_id: string
+  title: string
+  court: string
+  date: string
+  [key: string]: any
+}
+
 // 資料模型
 const basicData = ref({
   documentType: '',
@@ -294,7 +303,7 @@ const auxiliaryData = ref({
   attachments: ''
 })
 
-const selectedCases = ref([])
+const selectedCases = ref<CaseItem[]>([])
 const isDocumentGenerated = ref(false)
 const isGenerating = ref(false)
 const generatedDocument = ref('')
