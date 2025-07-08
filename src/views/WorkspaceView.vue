@@ -8,7 +8,22 @@ import LogDisplay from '../components/LogDisplay.vue';
 const workspaceStore = useWorkspaceStore();
 const activeTab = ref<'search' | 'generate'>('search');
 const refinementSteps = ref<any[]>([]);
-const logDisplayRef = ref<any>();
+const logDisplayRef = ref<InstanceType<typeof LogDisplay> | null>(null);
+const generateModuleRef = ref<InstanceType<typeof GenerateModule> | null>(null);
+const searchModuleRef = ref<InstanceType<typeof NewSearchModule> | null>(null);
+
+// Handle cases selection change from search module
+const handleCasesSelectionChanged = () => {
+  // Notify GenerateModule to reload selected cases
+  if (generateModuleRef.value && typeof generateModuleRef.value.loadSelectedCases === 'function') {
+    generateModuleRef.value.loadSelectedCases();
+  }
+  
+  // Notify SearchModule to reload search state to update UI
+  if (searchModuleRef.value && typeof searchModuleRef.value.loadSearchState === 'function') {
+    searchModuleRef.value.loadSearchState();
+  }
+};
 const isChatExpanded = ref(false);
 
 const toggleChat = () => {
@@ -88,15 +103,25 @@ onMounted(async () => {
 
     <!-- Tab Navigation -->
     <div class="border-b border-gray-300 dark:border-black mb-6">
-      <nav class="-mb-px flex gap-6">
+      <nav class="relative -mb-px flex gap-6">
+        <!-- Animated underline indicator -->
+        <div 
+          class="absolute bottom-0 h-0.5 bg-gradient-to-r from-blue-600 to-blue-700 transition-all duration-300 ease-out"
+          :style="{
+            left: activeTab === 'search' ? '0px' : '60px',
+            width: '36px'
+          }"
+        ></div>
         <button
+          ref="searchTab"
           @click="activeTab = 'search'"
-          :class="['py-2 px-1 text-sm font-medium border-b-2', activeTab === 'search' ? 'border-blue-700 text-blue-700 dark:text-white' : 'border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-500']">
+          :class="['relative py-2 px-1 text-sm font-medium transition-colors duration-200', activeTab === 'search' ? 'text-blue-700 dark:text-white' : 'text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white']">
           搜尋
         </button>
         <button
+          ref="generateTab"
           @click="activeTab = 'generate'"
-          :class="['py-2 px-1 text-sm font-medium border-b-2', activeTab === 'generate' ? 'border-blue-500 text-blue-600 dark:text-white' : 'border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-500']">
+          :class="['relative py-2 px-1 text-sm font-medium transition-colors duration-200', activeTab === 'generate' ? 'text-blue-600 dark:text-white' : 'text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white']">
           生成
         </button>
       </nav>
@@ -107,10 +132,10 @@ onMounted(async () => {
         <!-- Main Content Area -->
         <div class="flex-1 overflow-y-auto">
           <div v-show="activeTab === 'search'" class="space-y-6">
-            <NewSearchModule @update:search-progress="handleSearchProgress" />
+            <NewSearchModule ref="searchModuleRef" @update:search-progress="handleSearchProgress" @cases-selection-changed="handleCasesSelectionChanged" />
           </div>
           <div v-show="activeTab === 'generate'" class="space-y-6">
-            <GenerateModule @refinement-steps="handleRefinementSteps" />
+            <GenerateModule ref="generateModuleRef" @refinement-steps="handleRefinementSteps" @cases-selection-changed="handleCasesSelectionChanged" />
           </div>
         </div>
         

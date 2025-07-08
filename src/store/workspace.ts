@@ -311,6 +311,47 @@ export const useWorkspaceStore = defineStore('workspace', () => {
   // Backward compatibility function
   const deleteWorkspace = deleteTask;
 
+  // Get selected cases for document generation
+  async function getSelectedCases() {
+    if (!activeTaskId.value) return [];
+    
+    try {
+      const { data, error: supabaseError } = await supabase
+        .from('search_results')
+        .select('*')
+        .eq('task_id', activeTaskId.value)
+        .order('last_searched_at', { ascending: false })
+        .limit(1);
+
+      if (supabaseError) throw supabaseError;
+      
+      if (data && data.length > 0) {
+        const searchResult = data[0];
+        const results = searchResult.results || [];
+        
+        // Filter results where added_to_doc_gen is 'y'
+        const selectedCases = results.filter((result: any) => {
+          const addedToDocGen = searchResult.added_to_doc_gen?.[result.case_id];
+          return addedToDocGen === 'y';
+        }).map((result: any) => ({
+          case_id: result.case_id,
+          title: result.title || result.case_number,
+          court: result.court,
+          date: result.date_decided,
+          summary: result.summary,
+          relevance_score: result.relevance_score
+        }));
+        
+        return selectedCases;
+      }
+      
+      return [];
+    } catch (err) {
+      console.error('Error getting selected cases:', err);
+      return [];
+    }
+  }
+
   return {
     // New task-based API
     tasks,
@@ -340,6 +381,7 @@ export const useWorkspaceStore = defineStore('workspace', () => {
     loadLatestSearchResult,
     updateCurrentQuery,
     getCurrentQuery,
-    clearCurrentQueries
+    clearCurrentQueries,
+    getSelectedCases
   }
 });

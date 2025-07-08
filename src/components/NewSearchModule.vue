@@ -22,7 +22,7 @@ const searchQuery = ref('');
 const isLoading = ref(false);
 const searchResult = ref<any>(null);
 const inputRef = ref<HTMLInputElement | null>(null);
-const emit = defineEmits(['update:search-progress']);
+const emit = defineEmits(['update:search-progress', 'cases-selection-changed']);
 
 // Search mode selection
 const selectedSearchMethod = ref('hybrid');
@@ -198,6 +198,9 @@ async function toggleAddToDocGen(index: number) {
         caseIds, 
         addedToDocGenMap
       );
+      
+      // Emit event to notify parent component about selection change
+      emit('cases-selection-changed');
       
       // Update cache with new UI state
       if (workspaceStore.activeTaskId) {
@@ -465,6 +468,11 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
   
   return dataUrl;
 }
+
+// 暴露方法給父組件使用
+defineExpose({
+  loadSearchState
+})
 </script>
 
 <template>
@@ -547,16 +555,24 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
             </span>
             <!-- Search Mode Selection -->
              <div class="flex items-center gap-2">
-               <div class="inline-flex bg-gray-200 dark:bg-gray-700 rounded-lg p-1 gap-1">
+               <div class="relative inline-flex bg-gray-200 dark:bg-gray-700 rounded-lg p-1">
+                <!-- Animated background indicator -->
+                <div 
+                  class="absolute top-1 bottom-1 bg-gradient-to-r from-blue-400 to-blue-500 rounded-md shadow-sm transition-all duration-300 ease-out"
+                  :style="{
+                    left: `calc(${(availableSearchMethods.findIndex(m => m.value === selectedSearchMethod) / availableSearchMethods.length) * 99}% + 4px)`,
+                    width: `calc(${100 / availableSearchMethods.length}% - 8px)`
+                  }"
+                ></div>
                 <button
                   v-for="method in availableSearchMethods" 
                   :key="method.value"
                   @click="selectedSearchMethod = method.value"
                   :class="[
-                    'px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200',
+                    'relative z-10 px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200',
                     selectedSearchMethod === method.value
-                      ? 'bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-sm'
-                      : 'text-gray-600 dark:text-gray-200 hover:text-blue-600 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-gray-600'
+                      ? 'text-white'
+                      : 'text-gray-600 dark:text-gray-200 hover:text-blue-600 dark:hover:text-white'
                   ]"
                   :title="method.description"
                 >
@@ -618,7 +634,7 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
                 <div class="flex-1">
                   <div class="flex items-center gap-2 mb-1">
                     <h4 class="font-semibold text-lg text-gray-800 dark:text-white">
-                      {{ result.title || result.case_number }}
+                      {{ result.case_id }}
                     </h4>
                     <span v-if="result.added_to_doc_gen === 'y'" class="text-xs bg-green-100 dark:bg-gray-700 text-green-700 dark:text-gray-200 px-2 py-1 rounded-full font-medium">
                       ✓ 已加入文件生成
@@ -680,26 +696,21 @@ function generateJudicialUrl(caseId: string, decisionDate?: string): string {
                 'border-t-gray-200 dark:border-t-gray-500': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) < 80
               }" class="mt-4 pt-4 border-t">
                 <div class="flex justify-between items-center">
-                  <div class="text-xs text-gray-500 dark:text-gray-300">
-                    案件編號：{{ result.case_id }}
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <button 
-                      @click="toggleAddToDocGen(index)"
-                      :class="{
-                        'bg-green-500 hover:bg-green-600 text-white': result.added_to_doc_gen === 'y',
-                        'bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200': result.added_to_doc_gen !== 'y'
-                      }"
-                      class="text-sm font-medium px-3 py-1.5 rounded-lg transition-colors duration-200 flex items-center gap-1"
-                    >
-                      <span v-if="result.added_to_doc_gen === 'y'">✓</span>
-                      <span v-else>+</span>
-                      {{ result.added_to_doc_gen === 'y' ? '已加入文件生成' : '加入到文件生成' }}
-                    </button>
-                    <a :href="generateJudicialUrl(result.case_id, result.date_decided)" target="_blank" class="text-sm font-medium text-blue-500 dark:text-gray-200 hover:text-blue-600 dark:hover:text-white hover:underline">
-                      查看詳情 →
-                    </a>
-                  </div>
+                  <a :href="generateJudicialUrl(result.case_id, result.date_decided)" target="_blank" class="text-sm font-medium text-blue-500 dark:text-gray-200 hover:text-blue-600 dark:hover:text-white hover:underline">
+                    查看全文 →
+                  </a>
+                  <button 
+                    @click="toggleAddToDocGen(index)"
+                    :class="{
+                      'bg-green-500 hover:bg-green-600 text-white': result.added_to_doc_gen === 'y',
+                      'bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200': result.added_to_doc_gen !== 'y'
+                    }"
+                    class="text-sm font-medium px-3 py-1.5 rounded-lg transition-colors duration-200 flex items-center gap-1"
+                  >
+                    <span v-if="result.added_to_doc_gen === 'y'">✓</span>
+                    <span v-else>+</span>
+                    {{ result.added_to_doc_gen === 'y' ? '已加入文件生成' : '加入到文件生成' }}
+                  </button>
                 </div>
               </div>
             </div>

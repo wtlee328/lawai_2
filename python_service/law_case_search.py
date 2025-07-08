@@ -109,7 +109,7 @@ class LawCaseSearchService:
             for row in result.data:
                 cases.append({
                     'case_id': row['case_id'],
-                    'title': row['case_topic'] or row['case_id'],  # Use case_id if case_topic is empty
+                    'title': row['case_id'],  # Always use case_id as title
                     'case_topic': row['case_topic'],  # Keep original for compatibility
                     'date_decided': row['case_date'],
                     'case_date': row['case_date'],  # Keep original for compatibility
@@ -140,7 +140,7 @@ class LawCaseSearchService:
             for row in result.data:
                 cases.append({
                     'case_id': row['case_id'],
-                    'title': row['case_topic'] or row['case_id'],  # Use case_id if case_topic is empty
+                    'title': row['case_id'],  # Always use case_id as title
                     'case_topic': row['case_topic'],  # Keep original for compatibility
                     'date_decided': row['case_date'],
                     'case_date': row['case_date'],  # Keep original for compatibility
@@ -179,7 +179,7 @@ class LawCaseSearchService:
             for row in result.data:
                 cases.append({
                     'case_id': row['case_id'],
-                    'title': row['case_topic'] or row['case_id'],  # Use case_id if case_topic is empty
+                    'title': row['case_id'],  # Always use case_id as title
                     'case_topic': row['case_topic'],  # Keep original for compatibility
                     'date_decided': row['case_date'],
                     'case_date': row['case_date'],  # Keep original for compatibility
