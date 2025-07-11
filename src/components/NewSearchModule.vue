@@ -121,15 +121,8 @@ async function loadSearchState() {
     return;
   }
   
-  // If we already have search results displayed and they match the current task, don't reload
-  // only if we have cached state (to avoid unnecessary reloads during task switching)
-  if (searchResult.value && searchResult.value.results?.length > 0 && 
-      taskUIStateCache.value.has(workspaceStore.activeTaskId)) {
-    // Just update the query text
-    const currentQuery = workspaceStore.getCurrentQuery(workspaceStore.activeTaskId);
-    searchQuery.value = currentQuery;
-    return;
-  }
+  // Always reload from database to ensure fresh added_to_doc_gen state
+  // This is important when cases are removed from GenerateModule
   
   // If no cache exists, always reload from database to ensure fresh state
   // (important for login/logout scenarios)

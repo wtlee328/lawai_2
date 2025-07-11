@@ -7,11 +7,6 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('../views/HomeView.vue')
-    },
-    {
-      path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue')
     },
@@ -47,8 +42,8 @@ router.beforeEach(async (to, _from, next) => {
     // If route requires authentication and user is not logged in,
     // redirect to the login page.
     next({ name: 'login' });
-  } else if ((to.name === 'login' || to.name === 'home') && isAuthenticated) {
-    // If an authenticated user tries to access login or home page,
+  } else if (to.name === 'login' && isAuthenticated) {
+    // If an authenticated user tries to access login page,
     // redirect them to their workspace.
     next({ name: 'workspace' });
   } else {

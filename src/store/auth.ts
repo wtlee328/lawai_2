@@ -18,6 +18,12 @@ export const useAuthStore = defineStore('auth', () => {
   async function initSession() {
     const { data } = await supabase.auth.getSession();
     user.value = data.session?.user ?? null;
+    
+    // Listen for auth state changes
+    supabase.auth.onAuthStateChange((event, session) => {
+      user.value = session?.user ?? null;
+      error.value = null;
+    });
   }
 
   // Handle user login with email
@@ -48,6 +54,22 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading.value = false;
   }
 
+  // Handle Google OAuth login
+  async function loginWithGoogle() {
+    isLoading.value = true;
+    error.value = null;
+    const { data, error: authError } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/workspace`
+      }
+    });
+    if (authError) {
+      error.value = authError;
+    }
+    isLoading.value = false;
+  }
+
   // Handle user logout
   async function logout() {
     await supabase.auth.signOut();
@@ -67,6 +89,7 @@ export const useAuthStore = defineStore('auth', () => {
     initSession,
     login,
     signup,
+    loginWithGoogle,
     logout
   }
 });

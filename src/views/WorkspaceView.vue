@@ -162,7 +162,7 @@ onMounted(async () => {
 
     
     <!-- Floating Chat Widget -->
-    <div class="fixed bottom-6 right-6 z-50">
+    <div class="fixed bottom-6 right-16 z-50">
       <!-- Collapsed Chat Button -->
       <div v-if="!isChatExpanded" 
            @click="toggleChat"

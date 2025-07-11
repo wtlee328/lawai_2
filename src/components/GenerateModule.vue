@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-full gap-6">
     <!-- 左側資料輸入區 -->
-    <div class="flex-1 space-y-6 overflow-y-auto">
+    <div class="w-3/5 space-y-6 overflow-y-auto">
       <!-- 基本資料 -->
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <div class="p-4 border-b border-gray-200 dark:border-gray-700">
@@ -140,16 +140,28 @@
               尚未選擇任何判決書，請從搜尋區選擇相關判決
             </div>
             <div v-else class="space-y-2">
-              <div v-for="(case_, index) in selectedCases" :key="index" class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <div class="flex-1">
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ case_.title }}</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">{{ case_.court }} - {{ case_.date }}</div>
+              <div v-for="(case_, index) in selectedCases" :key="index" class="p-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
+                <div class="flex items-center justify-between">
+                  <div class="flex-1">
+                    <div class="text-sm font-medium text-gray-900 dark:text-white">{{ case_.title }}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ case_.court }} - {{ case_.date }}</div>
+                  </div>
+                  <div class="flex items-center space-x-1">
+                    <button @click="toggleCaseExpansion(case_.case_id)" class="text-gray-500 hover:text-gray-700 p-1">
+                      <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': expandedCases.has(case_.case_id) }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                      </svg>
+                    </button>
+                    <button @click="removeCase(index)" class="text-red-500 hover:text-red-700 p-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-                <button @click="removeCase(index)" class="text-red-500 hover:text-red-700 p-1">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                  </svg>
-                </button>
+                <div v-if="expandedCases.has(case_.case_id) && case_.summary" class="mt-2 pt-2 border-t border-gray-300 dark:border-gray-600">
+                  <div class="text-xs text-gray-600 dark:text-gray-300">{{ case_.summary }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -162,13 +174,15 @@
     </div>
 
     <!-- 右側生成文件顯示區 -->
-    <div class="w-96 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">文件生成</h3>
-      </div>
-      
-      <!-- 未生成文件時顯示檢查清單 -->
-      <div v-if="!isDocumentGenerated" class="p-4">
+    <div class="w-2/5 flex flex-col h-full overflow-y-auto">
+      <!-- 固定的資料完整性檢查和按鈕區域 -->
+      <div ref="generateContainerRef" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 sticky top-0 z-10">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">文件生成</h3>
+        </div>
+        
+        <!-- 未生成文件時顯示檢查清單 -->
+        <div v-if="!isDocumentGenerated" class="p-4">
         <div class="space-y-3 mb-6">
           <h4 class="text-md font-medium text-gray-800 dark:text-gray-200 mb-3">資料完整性檢查</h4>
           
@@ -209,25 +223,29 @@
           </div>
         </div>
         
-        <button 
-          @click="generateDocument" 
-          :disabled="!allDataComplete || isGenerating"
-          class="w-full py-3 px-4 rounded-lg font-medium transition-colors"
-          :class="allDataComplete && !isGenerating ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'"
-        >
-          <span v-if="isGenerating" class="flex items-center justify-center">
-            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            生成中...
-          </span>
-          <span v-else>生成文件</span>
-        </button>
+          <div class="flex justify-center">
+            <button 
+              @click="generateDocument" 
+              :disabled="!allDataComplete || isGenerating"
+              class="w-48 py-3 px-4 rounded-lg font-medium transition-colors"
+              :class="allDataComplete && !isGenerating ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'"
+            >
+            <span v-if="isGenerating" class="flex items-center justify-center">
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              生成中...
+            </span>
+            <span v-else>生成文件</span>
+            </button>
+          </div>
+        </div>
       </div>
       
-      <!-- 文件生成後顯示文件內容 -->
-      <div v-else class="p-4">
+      <!-- 文件生成後顯示的內容區域 -->
+      <div v-if="isDocumentGenerated" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mt-4 flex-1 overflow-auto">
+        <div class="p-4">
         <div class="mb-4 flex items-center justify-between">
           <h4 class="text-md font-medium text-gray-800 dark:text-gray-200">生成的文件</h4>
           <button @click="resetDocument" class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400">
@@ -237,25 +255,62 @@
         <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 max-h-96 overflow-y-auto">
           <div class="text-sm text-gray-900 dark:text-white whitespace-pre-wrap">{{ generatedDocument }}</div>
         </div>
-        <div class="mt-4 flex space-x-2">
-          <button class="flex-1 py-2 px-3 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors">
-            下載文件
-          </button>
-          <button class="flex-1 py-2 px-3 bg-gray-600 hover:bg-gray-700 text-white text-sm rounded-lg transition-colors">
-            複製內容
-          </button>
+          <div class="mt-4 flex space-x-2">
+            <button class="flex-1 py-2 px-3 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors">
+              下載文件
+            </button>
+            <button class="flex-1 py-2 px-3 bg-gray-600 hover:bg-gray-700 text-white text-sm rounded-lg transition-colors">
+              複製內容
+            </button>
+          </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- 浮動簡潔版UI -->
+  <div v-if="showFloatingUI && !isDocumentGenerated" class="fixed bottom-6 right-60 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-3 z-80">
+    <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-2">
+        <h4 class="text-sm font-medium text-gray-800 dark:text-gray-200 whitespace-nowrap">
+          {{ allDataComplete ? '文件生成' : '請完成輸入必要資料以進行生成' }}
+        </h4>
+        <div class="flex space-x-1">
+          <div class="w-2 h-2 rounded-full" :class="basicDataComplete ? 'bg-green-500' : 'bg-gray-300'"></div>
+          <div class="w-2 h-2 rounded-full" :class="partyDataComplete ? 'bg-green-500' : 'bg-gray-300'"></div>
+          <div class="w-2 h-2 rounded-full" :class="caseContentComplete ? 'bg-green-500' : 'bg-gray-300'"></div>
+          <div class="w-2 h-2 rounded-full" :class="auxiliaryDataComplete ? 'bg-green-500' : 'bg-gray-300'"></div>
+        </div>
+      </div>
+      <button 
+        @click="generateDocument" 
+        :disabled="!allDataComplete || isGenerating"
+        class="py-2 px-4 rounded-md text-sm font-medium transition-colors whitespace-nowrap"
+        :class="allDataComplete && !isGenerating ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'"
+      >
+        <span v-if="isGenerating" class="flex items-center">
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          生成中...
+        </span>
+        <span v-else>生成文件</span>
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useWorkspaceStore } from '../store/workspace'
 import { supabase } from '../supabase'
 
 const workspaceStore = useWorkspaceStore()
+
+// 浮動UI相關
+const showFloatingUI = ref(false)
+const generateContainerRef = ref<HTMLElement | null>(null)
 
 // 定義事件
 const emit = defineEmits<{
@@ -268,6 +323,8 @@ interface CaseItem {
   title: string
   court: string
   date: string
+  summary?: string
+  relevance_score?: number
   [key: string]: any
 }
 
@@ -304,6 +361,7 @@ const auxiliaryData = ref({
 })
 
 const selectedCases = ref<CaseItem[]>([])
+const expandedCases = ref<Set<string>>(new Set())
 const isDocumentGenerated = ref(false)
 const isGenerating = ref(false)
 const generatedDocument = ref('')
@@ -319,8 +377,36 @@ const loadSelectedCases = async () => {
 }
 
 // 組件掛載時載入已選擇的判決書
+// Intersection Observer用於檢測容器可見性
+let observer: IntersectionObserver | null = null
+
+const checkContainerVisibility = () => {
+  if (!generateContainerRef.value) return
+  
+  observer = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0]
+      showFloatingUI.value = !entry.isIntersecting
+    },
+    {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    }
+  )
+  
+  observer.observe(generateContainerRef.value)
+}
+
 onMounted(() => {
   loadSelectedCases()
+  // 延遲檢查容器可見性，確保DOM已渲染
+  setTimeout(checkContainerVisibility, 100)
+})
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect()
+  }
 })
 
 // 監聽任務切換，重新載入已選擇的判決書
@@ -356,44 +442,65 @@ const removeCase = async (index: number) => {
   if (!caseToRemove) return
   
   try {
-    // 先獲取現有的搜尋結果
-    const { data: searchResult, error: fetchError } = await supabase
+    // 先從本地陣列中移除，提供即時反饋
+    selectedCases.value.splice(index, 1)
+    
+    // 從展開狀態中移除
+    expandedCases.value.delete(caseToRemove.case_id)
+    
+    // 獲取所有包含該 case_id 的搜尋結果
+    const { data: searchResults, error: fetchError } = await supabase
       .from('search_results')
-      .select('added_to_doc_gen')
+      .select('id, added_to_doc_gen, case_ids')
       .eq('task_id', workspaceStore.activeTaskId)
-      .contains('case_ids', [caseToRemove.case_id])
-      .single()
     
     if (fetchError) {
       console.error('獲取搜尋結果失敗:', fetchError)
+      // 即使資料庫查詢失敗，也要發射事件以更新UI
+      emit('cases-selection-changed')
       return
     }
     
-    // 更新 added_to_doc_gen 物件
-    const updatedAddedToDocGen = {
-      ...(searchResult?.added_to_doc_gen || {}),
-      [caseToRemove.case_id]: 'n'
+    // 在客戶端過濾包含該 case_id 的結果
+    const relevantResults = searchResults?.filter(result => 
+      result.case_ids && result.case_ids.includes(caseToRemove.case_id)
+    ) || []
+    
+    // 更新所有相關的搜尋結果
+    let hasUpdateError = false
+    for (const result of relevantResults) {
+      const updatedAddedToDocGen = {
+        ...(result.added_to_doc_gen || {}),
+        [caseToRemove.case_id]: 'n'
+      }
+      
+      const { error: updateError } = await supabase
+        .from('search_results')
+        .update({ added_to_doc_gen: updatedAddedToDocGen })
+        .eq('id', result.id)
+      
+      if (updateError) {
+        console.error('更新搜尋結果失敗:', updateError)
+        hasUpdateError = true
+      }
     }
     
-    // 更新資料庫中的狀態
-    const { error } = await supabase
-      .from('search_results')
-      .update({ added_to_doc_gen: updatedAddedToDocGen })
-      .eq('task_id', workspaceStore.activeTaskId)
-      .contains('case_ids', [caseToRemove.case_id])
-    
-    if (error) {
-      console.error('更新判決書狀態失敗:', error)
-      return
-    }
-    
-    // 從本地陣列中移除
-    selectedCases.value.splice(index, 1)
-    
-    // 發射事件通知搜尋區更新
+    // 在所有資料庫操作完成後發射事件通知搜尋區更新
     emit('cases-selection-changed')
+    
   } catch (error) {
     console.error('移除判決書失敗:', error)
+    // 即使發生錯誤，也要發射事件以確保UI狀態同步
+    emit('cases-selection-changed')
+  }
+}
+
+// 切換案件摘要展開狀態
+const toggleCaseExpansion = (caseId: string) => {
+  if (expandedCases.value.has(caseId)) {
+    expandedCases.value.delete(caseId)
+  } else {
+    expandedCases.value.add(caseId)
   }
 }
 
