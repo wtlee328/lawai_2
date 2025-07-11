@@ -467,7 +467,6 @@ const removeCase = async (index: number) => {
     ) || []
     
     // 更新所有相關的搜尋結果
-    let hasUpdateError = false
     for (const result of relevantResults) {
       const updatedAddedToDocGen = {
         ...(result.added_to_doc_gen || {}),
@@ -481,7 +480,6 @@ const removeCase = async (index: number) => {
       
       if (updateError) {
         console.error('更新搜尋結果失敗:', updateError)
-        hasUpdateError = true
       }
     }
     

@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = data.session?.user ?? null;
     
     // Listen for auth state changes
-    supabase.auth.onAuthStateChange((event, session) => {
+    supabase.auth.onAuthStateChange((_, session) => {
       user.value = session?.user ?? null;
       error.value = null;
     });
@@ -58,7 +58,7 @@ export const useAuthStore = defineStore('auth', () => {
   async function loginWithGoogle() {
     isLoading.value = true;
     error.value = null;
-    const { data, error: authError } = await supabase.auth.signInWithOAuth({
+    const { error: authError } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/workspace`
