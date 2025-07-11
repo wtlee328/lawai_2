@@ -2,14 +2,14 @@
 import { ref, onMounted } from 'vue';
 import { useWorkspaceStore } from '../store/workspace';
 import SearchModule from '../components/SearchModule.vue';
-import GenerateModule from '../components/GenerateModule.vue';
+import FormInput from '../components/FormInput.vue';
 import LogDisplay from '../components/LogDisplay.vue';
 
 const workspaceStore = useWorkspaceStore();
 const activeTab = ref<'search' | 'generate'>('search');
 const refinementSteps = ref<any[]>([]);
 const logDisplayRef = ref<InstanceType<typeof LogDisplay> | null>(null);
-const generateModuleRef = ref<InstanceType<typeof GenerateModule> | null>(null);
+const generateModuleRef = ref<InstanceType<typeof FormInput> | null>(null);
 const searchModuleRef = ref<InstanceType<typeof SearchModule> | null>(null);
 
 // Handle cases selection change from search module
@@ -122,7 +122,7 @@ onMounted(async () => {
           ref="generateTab"
           @click="activeTab = 'generate'"
           :class="['relative py-2 px-1 text-sm font-medium transition-colors duration-200', activeTab === 'generate' ? 'text-blue-600 dark:text-white' : 'text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white']">
-          生成
+          輸入
         </button>
       </nav>
     </div>
@@ -135,7 +135,7 @@ onMounted(async () => {
             <SearchModule ref="searchModuleRef" @update:search-progress="handleSearchProgress" @cases-selection-changed="handleCasesSelectionChanged" />
           </div>
           <div v-show="activeTab === 'generate'" class="space-y-6">
-            <GenerateModule ref="generateModuleRef" @refinement-steps="handleRefinementSteps" @cases-selection-changed="handleCasesSelectionChanged" />
+            <FormInput ref="generateModuleRef" @refinement-steps="handleRefinementSteps" @cases-selection-changed="handleCasesSelectionChanged" />
           </div>
         </div>
         

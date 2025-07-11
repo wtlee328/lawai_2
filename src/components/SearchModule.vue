@@ -113,7 +113,7 @@ async function loadSearchState() {
   }
   
   // Always reload from database to ensure fresh added_to_doc_gen state
-  // This is important when cases are removed from GenerateModule
+  // This is important when cases are removed from FormInput
   
   // If no cache exists, always reload from database to ensure fresh state
   // (important for login/logout scenarios)

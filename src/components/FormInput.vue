@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-full gap-6">
     <!-- 左側資料輸入區 -->
-    <div class="w-3/5 space-y-6 overflow-y-auto">
+    <div class="flex-1 space-y-6 overflow-y-auto" style="flex-basis: 70%;">
       <!-- 基本資料 -->
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <div class="p-4 border-b border-gray-200 dark:border-gray-700">
@@ -174,12 +174,9 @@
     </div>
 
     <!-- 右側生成文件顯示區 -->
-    <div class="w-2/5 flex flex-col h-full overflow-y-auto">
+    <div class="flex flex-col h-full overflow-y-auto" style="flex-basis: 30%;">
       <!-- 固定的資料完整性檢查和按鈕區域 -->
       <div ref="generateContainerRef" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 sticky top-0 z-10">
-        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">文件生成</h3>
-        </div>
         
         <!-- 未生成文件時顯示檢查清單 -->
         <div v-if="!isDocumentGenerated" class="p-4">
@@ -269,19 +266,38 @@
   </div>
 
   <!-- 浮動簡潔版UI -->
-  <div v-if="showFloatingUI && !isDocumentGenerated" class="fixed bottom-6 right-60 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-3 z-80">
-    <div class="flex items-center space-x-4">
-      <div class="flex items-center space-x-2">
-        <h4 class="text-sm font-medium text-gray-800 dark:text-gray-200 whitespace-nowrap">
-          {{ allDataComplete ? '文件生成' : '請完成輸入必要資料以進行生成' }}
+  <div v-if="showFloatingUI && !isDocumentGenerated" class="fixed bottom-6 right-60 w-60 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 px-5 py-3 z-80">
+    <div class="space-y-3">
+      <!-- 第一行：文字 -->
+      <div class="text-left">
+        <h4 class="text-sm font-medium text-gray-800 dark:text-gray-200">
+          {{ allDataComplete ? '文件生成' : '請完成輸入必要資料' }}
         </h4>
-        <div class="flex space-x-1">
-          <div class="w-2 h-2 rounded-full" :class="basicDataComplete ? 'bg-green-500' : 'bg-gray-300'"></div>
-          <div class="w-2 h-2 rounded-full" :class="partyDataComplete ? 'bg-green-500' : 'bg-gray-300'"></div>
-          <div class="w-2 h-2 rounded-full" :class="caseContentComplete ? 'bg-green-500' : 'bg-gray-300'"></div>
-          <div class="w-2 h-2 rounded-full" :class="auxiliaryDataComplete ? 'bg-green-500' : 'bg-gray-300'"></div>
-        </div>
       </div>
+      <!-- 第二行：進度UI和按鈕 -->
+      <div class="flex items-center justify-between space-x-3">
+        <div class="flex space-x-3">
+          <div class="w-3 h-3 rounded-full flex items-center justify-center" :class="basicDataComplete ? 'bg-green-500' : 'bg-gray-300'">
+            <svg v-if="basicDataComplete" class="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div class="w-3 h-3 rounded-full flex items-center justify-center" :class="partyDataComplete ? 'bg-green-500' : 'bg-gray-300'">
+            <svg v-if="partyDataComplete" class="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div class="w-3 h-3 rounded-full flex items-center justify-center" :class="caseContentComplete ? 'bg-green-500' : 'bg-gray-300'">
+            <svg v-if="caseContentComplete" class="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div class="w-3 h-3 rounded-full flex items-center justify-center" :class="auxiliaryDataComplete ? 'bg-green-500' : 'bg-gray-300'">
+            <svg v-if="auxiliaryDataComplete" class="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+        </div>
       <button 
         @click="generateDocument" 
         :disabled="!allDataComplete || isGenerating"
@@ -297,6 +313,7 @@
         </span>
         <span v-else>生成文件</span>
       </button>
+      </div>
     </div>
   </div>
 </template>

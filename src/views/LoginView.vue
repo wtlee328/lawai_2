@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../store/auth';
 
@@ -9,6 +9,14 @@ const router = useRouter();
 
 const email = ref('');
 const password = ref('');
+const showFeatures = ref(true);
+
+// 自動切換顯示內容
+onMounted(() => {
+  setInterval(() => {
+    showFeatures.value = !showFeatures.value;
+  }, 4000); // 每4秒切換一次
+});
 
 const handleLogin = async () => {
   await authStore.login(email.value, password.value);
@@ -52,37 +60,117 @@ const handleGoogleLogin = async () => {
            </h1>
         </div>
 
-        <!-- 核心功能 -->
-        <div class="space-y-6">
-          <div class="group animate-slide-in-left animation-delay-500 cursor-pointer">
-            <div class="flex items-center">
-              <div class="w-3 h-3 bg-emerald-400 rounded-full mr-4 group-hover:scale-150 transition-all duration-300"></div>
-              <span class="text-lg text-gray-100 group-hover:text-white transition-colors">判決書語義搜索</span>
+        <!-- 內容切換容器 -->
+        <div class="relative min-h-[400px]">
+          <!-- 核心功能 -->
+          <div class="absolute inset-0 space-y-6" :class="{ 'opacity-100': showFeatures, 'opacity-0': !showFeatures }" style="transition: opacity 0.5s ease-in-out;">
+            <div class="group animate-slide-in-left animation-delay-500 cursor-pointer">
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-emerald-400 rounded-full mr-4 group-hover:scale-150 transition-all duration-300"></div>
+                <span class="text-lg text-gray-100 group-hover:text-white transition-colors">判決書語義搜索</span>
+              </div>
+              <p class="text-m text-cyan-400 ml-7 mt-1">運用 AI 技術精準理解查詢意圖，快速找到相關判決</p>
             </div>
-            <p class="text-m text-cyan-500 ml-7 mt-1">運用 AI 技術精準理解查詢意圖，快速找到相關判決</p>
+            
+            <div class="group animate-slide-in-left animation-delay-700 cursor-pointer">
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-purple-400 rounded-full mr-4 group-hover:scale-150 transition-all duration-300"></div>
+                <span class="text-lg text-gray-100 group-hover:text-white transition-colors">AI 書狀生成</span>
+              </div>
+              <p class="text-m text-cyan-400 ml-7 mt-1">基於判決書內容智能生成專業法律文件與書狀</p>
+            </div>
+            
+            <div class="group animate-slide-in-left animation-delay-900 cursor-pointer">
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-orange-400 rounded-full mr-4 group-hover:scale-150 transition-all duration-300"></div>
+                <span class="text-lg text-gray-100 group-hover:text-white transition-colors">高效案件分析</span>
+              </div>
+              <p class="text-m text-cyan-400 ml-7 mt-1">整合搜索並提供分析功能，大幅提升書狀編寫效率</p>
+            </div>
           </div>
-          
-          <div class="group animate-slide-in-left animation-delay-700 cursor-pointer">
-            <div class="flex items-center">
-              <div class="w-3 h-3 bg-purple-400 rounded-full mr-4 group-hover:scale-150 transition-all duration-300"></div>
-              <span class="text-lg text-gray-100 group-hover:text-white transition-colors">AI 書狀生成</span>
+
+          <!-- 圖像化步驟流程 -->
+          <div class="absolute inset-0" :class="{ 'opacity-100': !showFeatures, 'opacity-0': showFeatures }" style="transition: opacity 0.5s ease-in-out;">
+            <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
+              <h3 class="text-white font-semibold text-base mb-4 text-center">智能法律助手工作流程</h3>
+              
+              <!-- 橫向步驟流程 -->
+              <div class="space-y-4">
+                <!-- 第一行：步驟 1 和 2 -->
+                <div class="flex items-center justify-between">
+                  <!-- 步驟 1 -->
+                  <div class="flex-1 text-center">
+                    <div class="relative">
+                      <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">
+                        <span class="text-white font-bold text-sm">1</span>
+                      </div>
+                      <h4 class="text-white font-medium text-xs mb-1">AI搜尋</h4>
+                      <p class="text-cyan-300 text-xs leading-tight px-1">輸入案件基本資料，<br>由AI找出最適判決</p>
+                    </div>
+                  </div>
+                  
+                  <!-- 連接線 -->
+                  <div class="flex-shrink-0 px-2">
+                    <span class="text-2xl text-cyan-400">→</span>
+                  </div>
+                  
+                  <!-- 步驟 2 -->
+                  <div class="flex-1 text-center">
+                    <div class="relative">
+                      <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">
+                        <span class="text-white font-bold text-sm">2</span>
+                      </div>
+                      <h4 class="text-white font-medium text-xs mb-1">智能生成</h4>
+                      <p class="text-cyan-300 text-xs leading-tight px-1">AI判斷整理爭點<br>與邏輯生成文件</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- 左下箭頭連接線 -->
+                <div class="flex justify-center py-1">
+                  <span class="text-2xl text-cyan-400">↙</span>
+                </div>
+                
+                <!-- 第二行：步驟 3 和完成 -->
+                <div class="flex items-center justify-between">
+                  <!-- 步驟 3 -->
+                  <div class="flex-1 text-center">
+                    <div class="relative">
+                      <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">
+                        <span class="text-white font-bold text-sm">3</span>
+                      </div>
+                      <h4 class="text-white font-medium text-xs mb-1">AI聊天功能</h4>
+                      <p class="text-cyan-300 text-xs leading-tight px-1">透過對話調整輸出結<br>果，獲得精準法律文件</p>
+                    </div>
+                  </div>
+                  
+                  <!-- 連接線 -->
+                  <div class="flex-shrink-0 px-2">
+                    <span class="text-2xl text-cyan-400">→</span>
+                  </div>
+                  
+                  <!-- 完成 -->
+                  <div class="flex-1 text-center">
+                    <div class="relative">
+                      <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                      </div>
+                      <h4 class="text-white font-medium text-xs mb-1">完成！</h4>
+                      <p class="text-cyan-300 text-xs leading-tight px-1">取得您需要的法律資訊<br>與文件</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <p class="text-m text-cyan-500 ml-7 mt-1">基於判決書內容智能生成專業法律文件與書狀</p>
-          </div>
-          
-          <div class="group animate-slide-in-left animation-delay-900 cursor-pointer">
-            <div class="flex items-center">
-              <div class="w-3 h-3 bg-orange-400 rounded-full mr-4 group-hover:scale-150 transition-all duration-300"></div>
-              <span class="text-lg text-gray-100 group-hover:text-white transition-colors">高效案件研究</span>
-            </div>
-            <p class="text-m text-cyan-500 ml-7 mt-1">整合搜索與生成功能，大幅提升法律研究效率</p>
           </div>
         </div>
 
         <!-- 底部標語 -->
         <div class="text-center mt-16 animate-fade-in animation-delay-1100">
           <p class="text-gray-100">
-            -讓 AI 成為您的法律夥伴-
+            - 讓 AI 成為您的法律夥伴 -
           </p>
         </div>
       </div>
