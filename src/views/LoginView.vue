@@ -117,7 +117,7 @@ const handleGoogleLogin = async () => {
                   <!-- 步驟 2 -->
                   <div class="flex-1 text-center">
                     <div class="relative">
-                      <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">
+                      <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">
                         <span class="text-white font-bold text-sm">2</span>
                       </div>
                       <h4 class="text-white font-medium text-xs mb-1">智能生成</h4>
@@ -136,7 +136,7 @@ const handleGoogleLogin = async () => {
                   <!-- 步驟 3 -->
                   <div class="flex-1 text-center">
                     <div class="relative">
-                      <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">
+                      <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">
                         <span class="text-white font-bold text-sm">3</span>
                       </div>
                       <h4 class="text-white font-medium text-xs mb-1">AI聊天功能</h4>
