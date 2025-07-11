@@ -17,9 +17,15 @@ const showUserMenu = ref(false);
 
 // Handles the logout process
 async function handleLogout() {
-  await authStore.logout();
-  // After logout, redirect user to the login page
-  router.push({ name: 'login' });
+  try {
+    await authStore.logout();
+    // After logout, redirect user to the login page
+    router.push({ name: 'login' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    // Even if logout fails, redirect to login page
+    router.push({ name: 'login' });
+  }
 }
 
 // Handle workspace switching with search results loading

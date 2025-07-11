@@ -72,13 +72,40 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Handle user logout
   async function logout() {
-    await supabase.auth.signOut();
-    user.value = null;
-    
-    // Clear current queries from workspace store
-    const { useWorkspaceStore } = await import('./workspace');
-    const workspaceStore = useWorkspaceStore();
-    workspaceStore.clearCurrentQueries();
+    try {
+      // Always attempt to sign out to clear all session data
+      const { error } = await supabase.auth.signOut();
+      if (error && error.message !== 'Auth session missing!') {
+        console.warn('Supabase signOut error:', error.message);
+      }
+    } catch (error) {
+      console.warn('SignOut API call failed:', error);
+    } finally {
+      // Force clear local state and localStorage
+      user.value = null;
+      
+      // Clear localStorage manually to ensure complete logout
+      try {
+        // Clear common Supabase auth keys
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+          if (key.includes('supabase') || key.includes('sb-')) {
+            localStorage.removeItem(key);
+          }
+        });
+      } catch (error) {
+        console.warn('Error clearing localStorage:', error);
+      }
+      
+      // Clear current queries from workspace store
+      try {
+        const { useWorkspaceStore } = await import('./workspace');
+        const workspaceStore = useWorkspaceStore();
+        workspaceStore.clearCurrentQueries();
+      } catch (error) {
+        console.warn('Error clearing workspace queries:', error);
+      }
+    }
   }
 
   return {

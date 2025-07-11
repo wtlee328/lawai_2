@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useWorkspaceStore } from '../store/workspace';
-import NewSearchModule from '../components/NewSearchModule.vue';
+import SearchModule from '../components/SearchModule.vue';
 import GenerateModule from '../components/GenerateModule.vue';
 import LogDisplay from '../components/LogDisplay.vue';
 
@@ -10,7 +10,7 @@ const activeTab = ref<'search' | 'generate'>('search');
 const refinementSteps = ref<any[]>([]);
 const logDisplayRef = ref<InstanceType<typeof LogDisplay> | null>(null);
 const generateModuleRef = ref<InstanceType<typeof GenerateModule> | null>(null);
-const searchModuleRef = ref<InstanceType<typeof NewSearchModule> | null>(null);
+const searchModuleRef = ref<InstanceType<typeof SearchModule> | null>(null);
 
 // Handle cases selection change from search module
 const handleCasesSelectionChanged = () => {
@@ -43,7 +43,7 @@ const animateRobot = () => {
 // 每3秒觸發一次動畫
 setInterval(animateRobot, 3000);
 
-// Handle refinement steps from NewSearchModule
+// Handle refinement steps from SearchModule
 const handleRefinementSteps = (steps: any[]) => {
   refinementSteps.value = steps;
 };
@@ -132,7 +132,7 @@ onMounted(async () => {
         <!-- Main Content Area -->
         <div class="flex-1 overflow-y-auto">
           <div v-show="activeTab === 'search'" class="space-y-6">
-            <NewSearchModule ref="searchModuleRef" @update:search-progress="handleSearchProgress" @cases-selection-changed="handleCasesSelectionChanged" />
+            <SearchModule ref="searchModuleRef" @update:search-progress="handleSearchProgress" @cases-selection-changed="handleCasesSelectionChanged" />
           </div>
           <div v-show="activeTab === 'generate'" class="space-y-6">
             <GenerateModule ref="generateModuleRef" @refinement-steps="handleRefinementSteps" @cases-selection-changed="handleCasesSelectionChanged" />
