@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="200" height="200">
+  <!-- 
+    SVG Robot Head Logo
+    - Easy to customize colors in the <style> section.
+    - Built with simple, geometric shapes for scalability.
+  -->
+  <defs>
+    <style>
+      .head-main   { fill: #8e9aaf; } /* Main head color */
+      .head-details { fill: #3c4a5c; } /* Darker details and antenna */
+      .head-visor   { fill: #42e2f5; } /* Glowing visor and antenna tip */
+    </style>
+  </defs>
+
+  <!-- Side "ear" pieces (drawn first to be in the background) -->
+  <rect class="head-details" x="15" y="40" width="8" height="20" rx="4"></rect>
+  <rect class="head-details" x="77" y="40" width="8" height="20" rx="4"></rect>
+
+  <!-- Main head shape -->
+  <rect class="head-main" x="20" y="20" width="60" height="60" rx="8"></rect>
+  
+  <!-- Antenna -->
+  <line class="head-details" x1="50" y1="20" x2="50" y2="10" stroke="#3c4a5c" stroke-width="3" stroke-linecap="round"></line>
+  <circle class="head-visor" cx="50" cy="8" r="4"></circle>
+  
+  <!-- Eye visor -->
+  <rect class="head-visor" x="30" y="35" width="40" height="15" rx="5"></rect>
+</svg>

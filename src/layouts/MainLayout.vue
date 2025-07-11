@@ -5,7 +5,7 @@ import { useWorkspaceStore } from '../store/workspace';
 import { useAuthStore } from '../store/auth';
 import { LogOut, PlusSquare, Edit2, Check, X, Trash2, User, ChevronDown } from 'lucide-vue-next';
 import ThemeToggle from '../components/ThemeToggle.vue';
-import lawaiLogo from '../assets/lawai.svg';
+
 
 const workspaceStore = useWorkspaceStore();
 const authStore = useAuthStore();
@@ -111,7 +111,7 @@ onUnmounted(() => {
     <aside class="w-64 flex-shrink-0 bg-white dark:bg-gray-900 flex flex-col p-4 border-r border-gray-200 dark:border-0 relative">
       <!-- Logo and Theme Toggle -->
       <div class="flex items-center justify-between mb-8">
-        <img :src="lawaiLogo" alt="Lawai Logo" class="h-10" />
+        <img src="/lawai.svg" alt="Lawai Logo" class="h-10" />
         <ThemeToggle />
       </div>
 

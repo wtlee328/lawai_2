@@ -28,7 +28,7 @@
       <!-- Empty State -->
       <div v-if="searchSteps.length === 0" class="text-center py-8">
         <div class="flex justify-center mx-auto mb-0">
-          <img src="/src/assets/polarbear.svg" alt="Polar Bear" class="w-28 h-28 object-contain" />
+          <img src="/polarbear.svg" alt="Polar Bear" class="w-28 h-28 object-contain" />
         </div>
         <p class="text-gray-500 dark:text-gray-300 text-sm">等待搜索開始...</p>
       </div>

@@ -173,7 +173,7 @@ onMounted(async () => {
           <div class="absolute inset-0 rounded-full bg-blue-300 opacity-20 animate-ping" style="animation-delay: 0.2s;"></div>
           <div class="absolute inset-0 rounded-full bg-blue-200 opacity-10 animate-ping" style="animation-delay: 0.4s;"></div>
         </div>
-        <img src="/src/assets/rob.svg" alt="Robot" 
+        <img src="/rob.svg" alt="Robot" 
              :class="['w-6 h-6 transition-transform duration-300 relative z-10', isRobotAnimating ? 'animate-bounce' : '']" />
         <span class="text-sm font-medium relative z-10">呼叫老外</span>
       </div>
@@ -183,7 +183,7 @@ onMounted(async () => {
         <!-- Chat Header -->
         <div class="bg-blue-600 text-white p-4 rounded-t-lg flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <img src="/src/assets/rob.svg" alt="Robot" class="w-5 h-5" />
+            <img src="/rob.svg" alt="Robot" class="w-5 h-5" />
             <span class="font-medium">AI 助手</span>
           </div>
           <button @click="toggleChat" class="text-white hover:text-gray-200 transition-colors">

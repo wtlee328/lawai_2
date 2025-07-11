@@ -5,16 +5,7 @@ import { useWorkspaceStore } from '../store/workspace';
 import { useAuthStore } from '../store/auth';
 
 // Import number SVG icons
-import icon0 from '../assets/0.svg';
-import icon1 from '../assets/1.svg';
-import icon2 from '../assets/2.svg';
-import icon3 from '../assets/3.svg';
-import icon4 from '../assets/4.svg';
-import icon5 from '../assets/5.svg';
-import icon6 from '../assets/6.svg';
-import icon7 from '../assets/7.svg';
-import icon8 from '../assets/8.svg';
-import icon9 from '../assets/9.svg';
+
 
 const workspaceStore = useWorkspaceStore();
 const authStore = useAuthStore();
@@ -34,7 +25,7 @@ const availableSearchMethods = [
 ];
 
 // Number icon mapping
-const numberIcons = [icon0, icon1, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9];
+const numberIcons = ['/0.svg', '/1.svg', '/2.svg', '/3.svg', '/4.svg', '/5.svg', '/6.svg', '/7.svg', '/8.svg', '/9.svg'];
 
 // Function to get number icons for ranking
 const getRankingIcons = (rank: number) => {

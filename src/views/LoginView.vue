@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../store/auth';
-import lawaiLogo from '../assets/lawai_bw.svg';
+
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -33,14 +33,14 @@ const handleGoogleLogin = async () => {
 <template>
   <div class="h-screen w-screen relative flex overflow-hidden">
     <!-- 背景圖片 -->
-    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url('/src/assets/david-kidd-STWpM_WPrEs-unsplash.jpg')"></div>
+    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url('/david-kidd-STWpM_WPrEs-unsplash.jpg')"></div>
     <!-- 背景遮罩 -->
      <div class="absolute inset-0 bg-black bg-opacity-25"></div>
     <!-- Left Side - App Introduction -->
      <div class="hidden lg:flex lg:w-1/2 flex-col relative px-12 xl:px-20 z-10">
       <!-- Logo 固定左上角 -->
        <div class="absolute top-8 left-8">
-         <img :src="lawaiLogo" alt="Lawai Logo" class="h-10" />
+         <img src="/lawai_bw.svg" alt="Lawai Logo" class="h-10" />
        </div>
 
       <!-- 主要內容區 -->
@@ -93,7 +93,7 @@ const handleGoogleLogin = async () => {
       <div class="w-full max-w-md">
         <!-- Mobile Logo -->
         <div class="lg:hidden flex items-center justify-center mb-8">
-          <img :src="lawaiLogo" alt="Lawai Logo" class="h-10 mr-3" />
+          <img src="/lawai_bw.svg" alt="Lawai Logo" class="h-10 mr-3" />
           <span class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Lawai 2.0</span>
         </div>
         
