@@ -46,7 +46,7 @@ async function handleWorkspaceSwitch(workspaceId: string) {
   workspaceStore.switchWorkspace(workspaceId);
   
   // Only load search results if the workspace doesn't have existing results to preserve UI state
-  if (!workspaceStore.activeTask?.latestSearchResult) {
+  if (!workspaceStore.activeTask?.latestSearchHistory) {
     const searchResults = await workspaceStore.loadSearchResults(workspaceId);
     if (searchResults && workspaceStore.activeWorkspace) {
       workspaceStore.activeWorkspace.searchResults = searchResults.results;
