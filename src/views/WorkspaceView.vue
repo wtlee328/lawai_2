@@ -7,7 +7,7 @@ import LogDisplay from '../components/LogDisplay.vue';
 
 const workspaceStore = useWorkspaceStore();
 const activeTab = ref<'search' | 'generate'>('search');
-const refinementSteps = ref<any[]>([]);
+
 const logDisplayRef = ref<InstanceType<typeof LogDisplay> | null>(null);
 const generateModuleRef = ref<InstanceType<typeof FormInput> | null>(null);
 const searchModuleRef = ref<InstanceType<typeof SearchModule> | null>(null);
@@ -43,10 +43,7 @@ const animateRobot = () => {
 // 每3秒觸發一次動畫
 setInterval(animateRobot, 3000);
 
-// Handle refinement steps from SearchModule
-const handleRefinementSteps = (steps: any[]) => {
-  refinementSteps.value = steps;
-};
+
 
 // Handle search progress events
 const handleSearchProgress = (event: any) => {
@@ -69,8 +66,8 @@ onMounted(async () => {
   }
   
   // Only load latest search results if there are no existing results to preserve UI state
-  if (workspaceStore.activeWorkspaceId && !workspaceStore.activeTask?.latestSearchResult) {
-    await workspaceStore.loadLatestSearchResult(workspaceStore.activeWorkspaceId);
+  if (workspaceStore.activeWorkspaceId && !workspaceStore.activeTask?.latestSearchHistory) {
+    await workspaceStore.loadSearchHistory(workspaceStore.activeWorkspaceId);
   }
 });
 </script>
@@ -135,13 +132,13 @@ onMounted(async () => {
             <SearchModule ref="searchModuleRef" @update:search-progress="handleSearchProgress" @cases-selection-changed="handleCasesSelectionChanged" />
           </div>
           <div v-show="activeTab === 'generate'" class="space-y-6">
-            <FormInput ref="generateModuleRef" @refinement-steps="handleRefinementSteps" @cases-selection-changed="handleCasesSelectionChanged" />
+            <FormInput ref="generateModuleRef" @cases-selection-changed="handleCasesSelectionChanged" />
           </div>
         </div>
         
         <!-- Log Display Sidebar - Only show on search tab -->
         <div v-show="activeTab === 'search'" class="w-1/3 min-w-0">
-          <LogDisplay ref="logDisplayRef" :refinement-steps="refinementSteps" />
+          <LogDisplay ref="logDisplayRef" />
         </div>
       </div>
     </div>

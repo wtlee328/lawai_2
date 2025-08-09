@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useWorkspaceStore } from '../store/workspace';
 import { useAuthStore } from '../store/auth';
@@ -14,6 +14,19 @@ const router = useRouter();
 const editingWorkspaceId = ref<string | null>(null);
 const editingName = ref('');
 const showUserMenu = ref(false);
+
+// Reactive theme detection for logo
+const isDarkMode = ref(false);
+
+// Function to update theme state
+const updateTheme = () => {
+  isDarkMode.value = document.documentElement.classList.contains('dark');
+};
+
+// Computed property for theme-appropriate logo
+const logoImage = computed(() => {
+  return isDarkMode.value ? '/lawai_white.svg' : '/lawai_black.svg';
+});
 
 // Handles the logout process
 async function handleLogout() {
@@ -103,11 +116,34 @@ function handleClickOutside(event: Event) {
 // Add event listener for clicking outside
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
+  
+  // Initialize theme state
+  updateTheme();
+  
+  // Watch for theme changes using MutationObserver
+  const observer = new MutationObserver(() => {
+    updateTheme();
+  });
+  
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class']
+  });
+  
+  // Store observer reference for cleanup
+  (window as any).__logoThemeObserver = observer;
 });
 
 // Remove event listener on unmount
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside);
+  
+  // Clean up theme observer
+  const observer = (window as any).__logoThemeObserver;
+  if (observer) {
+    observer.disconnect();
+    delete (window as any).__logoThemeObserver;
+  }
 });
 </script>
 
@@ -117,7 +153,7 @@ onUnmounted(() => {
     <aside class="w-64 flex-shrink-0 bg-white dark:bg-gray-900 flex flex-col p-4 border-r border-gray-200 dark:border-0 relative">
       <!-- Logo and Theme Toggle -->
       <div class="flex items-center justify-between mb-8">
-        <img src="/lawai.svg" alt="Lawai Logo" class="h-10" />
+        <img :src="logoImage" alt="Lawai Logo" class="h-10 transition-opacity duration-300" />
         <ThemeToggle />
       </div>
 

@@ -1,0 +1,234 @@
+-- Migration to update case_2 table for multi-field embeddings ingestion
+-- This completely recreates the table with the proper schema for legal case data
+
+-- Drop existing table and recreate with complete schema
+DROP TABLE IF EXISTS case_2 CASCADE;
+
+-- Create the complete case_2 table with all required columns
+CREATE TABLE case_2 (
+    -- Primary key
+    id BIGSERIAL PRIMARY KEY,
+
+    -- Case content fields
+    content TEXT,
+    summary TEXT,
+    dispute TEXT,
+    opinion TEXT,
+    result TEXT,
+    laws JSONB,
+
+    -- Case metadata
+    case_id TEXT, -- Added this column back
+    url TEXT,
+    court TEXT,
+    topic TEXT,
+    date DATE,
+    type TEXT,
+
+    -- Multi-field embedding columns
+    content_embedding VECTOR(1536),
+    dispute_embedding VECTOR(512),
+    opinion_embedding VECTOR(512),
+    result_embedding VECTOR(512),
+
+    -- Record timestamps
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Create indexes for optimal performance
+
+-- HNSW indexes for vector similarity search
+CREATE INDEX case_2_content_embedding_hnsw_idx
+ON case_2 USING hnsw (content_embedding vector_cosine_ops);
+
+CREATE INDEX case_2_dispute_embedding_hnsw_idx
+ON case_2 USING hnsw (dispute_embedding vector_cosine_ops);
+
+CREATE INDEX case_2_opinion_embedding_hnsw_idx
+ON case_2 USING hnsw (opinion_embedding vector_cosine_ops);
+
+CREATE INDEX case_2_result_embedding_hnsw_idx
+ON case_2 USING hnsw (result_embedding vector_cosine_ops);
+
+-- B-tree indexes for metadata queries
+CREATE INDEX idx_case_2_case_id ON case_2(case_id); -- Added index for case_id
+CREATE INDEX idx_case_2_court ON case_2(court);
+CREATE INDEX idx_case_2_topic ON case_2(topic);
+CREATE INDEX idx_case_2_date ON case_2(date);
+CREATE INDEX idx_case_2_type ON case_2(type);
+CREATE INDEX idx_case_2_updated_at ON case_2(updated_at);
+
+-- GIN index for JSONB laws column
+CREATE INDEX idx_case_2_laws_gin ON case_2 USING GIN(laws);
+
+-- Full-text search indexes for text content
+CREATE INDEX idx_case_2_content_fts ON case_2 USING GIN(to_tsvector('english', content));
+CREATE INDEX idx_case_2_summary_fts ON case_2 USING GIN(to_tsvector('english', summary));
+CREATE INDEX idx_case_2_dispute_fts ON case_2 USING GIN(to_tsvector('english', dispute));
+CREATE INDEX idx_case_2_opinion_fts ON case_2 USING GIN(to_tsvector('english', opinion));
+CREATE INDEX idx_case_2_result_fts ON case_2 USING GIN(to_tsvector('english', result));
+
+-- Add comprehensive column comments
+COMMENT ON TABLE case_2 IS 'Table for storing law case data with multi-field vector embeddings for advanced similarity search';
+
+-- Primary key
+COMMENT ON COLUMN case_2.id IS 'Auto-incrementing primary key and unique identifier for the legal case';
+
+-- Case content fields
+COMMENT ON COLUMN case_2.content IS 'Full content or text of the legal case';
+COMMENT ON COLUMN case_2.summary IS 'Summary or brief description of the case';
+COMMENT ON COLUMN case_2.dispute IS 'Description of the legal dispute or issue';
+COMMENT ON COLUMN case_2.opinion IS 'Court opinion, judgment text, or legal reasoning';
+COMMENT ON COLUMN case_2.result IS 'Result, outcome, or decision of the case';
+COMMENT ON COLUMN case_2.laws IS 'Related laws, regulations, and legal references in JSON format';
+
+-- Case metadata
+COMMENT ON COLUMN case_2.case_id IS 'External or original identifier for the case'; -- Added comment for case_id
+COMMENT ON COLUMN case_2.url IS 'URL or reference link to the original case document';
+COMMENT ON COLUMN case_2.court IS 'Court or judicial body that handled the case';
+COMMENT ON COLUMN case_2.topic IS 'Topic, subject matter, or legal area of the case';
+COMMENT ON COLUMN case_2.date IS 'Date of the case, judgment, or decision';
+COMMENT ON COLUMN case_2.type IS 'Type or category classification of the case';
+
+-- Vector embedding columns
+COMMENT ON COLUMN case_2.content_embedding IS 'Vector embedding for full content text (1536 dimensions)';
+COMMENT ON COLUMN case_2.dispute_embedding IS 'Vector embedding for dispute text (512 dimensions)';
+COMMENT ON COLUMN case_2.opinion_embedding IS 'Vector embedding for opinion text (512 dimensions)';
+COMMENT ON COLUMN case_2.result_embedding IS 'Vector embedding for result text (512 dimensions)';
+
+-- Record timestamps
+COMMENT ON COLUMN case_2.updated_at IS 'Timestamp when the record was last updated';
+
+-- Create function to automatically update updated_at timestamp
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Create trigger to automatically update updated_at on record changes
+CREATE TRIGGER update_case_2_updated_at
+    BEFORE UPDATE ON case_2
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Drop the function if it exists to avoid signature conflicts
+DROP FUNCTION IF EXISTS match_cases_v2;
+
+-- Create a function for multi-field vector similarity search
+CREATE OR REPLACE FUNCTION match_cases_v2(
+    query_content_embedding VECTOR(1536) DEFAULT NULL,
+    query_dispute_embedding VECTOR(512) DEFAULT NULL,
+    query_opinion_embedding VECTOR(512) DEFAULT NULL,
+    query_result_embedding VECTOR(512) DEFAULT NULL,
+    match_threshold FLOAT DEFAULT 0.8,
+    match_count INT DEFAULT 10
+)
+RETURNS TABLE (
+    id BIGINT,
+    case_id TEXT, -- Added to function return table
+    content TEXT,
+    summary TEXT,
+    dispute TEXT,
+    opinion TEXT,
+    result TEXT,
+    laws JSONB,
+    url TEXT,
+    court TEXT,
+    topic TEXT,
+    date DATE,
+    type TEXT,
+    content_similarity FLOAT,
+    dispute_similarity FLOAT,
+    opinion_similarity FLOAT,
+    result_similarity FLOAT,
+    avg_similarity FLOAT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        c.id,
+        c.case_id, -- Added to function select list
+        c.content,
+        c.summary,
+        c.dispute,
+        c.opinion,
+        c.result,
+        c.laws,
+        c.url,
+        c.court,
+        c.topic,
+        c.date,
+        c.type,
+        CASE
+            WHEN query_content_embedding IS NOT NULL AND c.content_embedding IS NOT NULL
+            THEN 1 - (c.content_embedding <=> query_content_embedding)
+            ELSE NULL
+        END AS content_similarity,
+        CASE
+            WHEN query_dispute_embedding IS NOT NULL AND c.dispute_embedding IS NOT NULL
+            THEN 1 - (c.dispute_embedding <=> query_dispute_embedding)
+            ELSE NULL
+        END AS dispute_similarity,
+        CASE
+            WHEN query_opinion_embedding IS NOT NULL AND c.opinion_embedding IS NOT NULL
+            THEN 1 - (c.opinion_embedding <=> query_opinion_embedding)
+            ELSE NULL
+        END AS opinion_similarity,
+        CASE
+            WHEN query_result_embedding IS NOT NULL AND c.result_embedding IS NOT NULL
+            THEN 1 - (c.result_embedding <=> query_result_embedding)
+            ELSE NULL
+        END AS result_similarity,
+        (
+            COALESCE(
+                CASE
+                    WHEN query_content_embedding IS NOT NULL AND c.content_embedding IS NOT NULL
+                    THEN 1 - (c.content_embedding <=> query_content_embedding)
+                    ELSE NULL
+                END, 0
+            ) +
+            COALESCE(
+                CASE
+                    WHEN query_dispute_embedding IS NOT NULL AND c.dispute_embedding IS NOT NULL
+                    THEN 1 - (c.dispute_embedding <=> query_dispute_embedding)
+                    ELSE NULL
+                END, 0
+            ) +
+            COALESCE(
+                CASE
+                    WHEN query_opinion_embedding IS NOT NULL AND c.opinion_embedding IS NOT NULL
+                    THEN 1 - (c.opinion_embedding <=> query_opinion_embedding)
+                    ELSE NULL
+                END, 0
+            ) +
+            COALESCE(
+                CASE
+                    WHEN query_result_embedding IS NOT NULL AND c.result_embedding IS NOT NULL
+                    THEN 1 - (c.result_embedding <=> query_result_embedding)
+                    ELSE NULL
+                END, 0
+            )
+        ) / (
+            CASE WHEN query_content_embedding IS NOT NULL THEN 1 ELSE 0 END +
+            CASE WHEN query_dispute_embedding IS NOT NULL THEN 1 ELSE 0 END +
+            CASE WHEN query_opinion_embedding IS NOT NULL THEN 1 ELSE 0 END +
+            CASE WHEN query_result_embedding IS NOT NULL THEN 1 ELSE 0 END
+        ) AS avg_similarity
+    FROM case_2 c
+    WHERE
+        (query_content_embedding IS NULL OR c.content_embedding IS NOT NULL) AND
+        (query_dispute_embedding IS NULL OR c.dispute_embedding IS NOT NULL) AND
+        (query_opinion_embedding IS NULL OR c.opinion_embedding IS NOT NULL) AND
+        (query_result_embedding IS NULL OR c.result_embedding IS NOT NULL)
+    ORDER BY avg_similarity DESC
+    LIMIT match_count;
+END;
+$$;
+
+-- Add comment for the function
+COMMENT ON FUNCTION match_cases_v2 IS 'Multi-field vector similarity search function for finding similar legal cases based on content, dispute, opinion, and result embeddings';

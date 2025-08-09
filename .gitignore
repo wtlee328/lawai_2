@@ -24,3 +24,12 @@ dist-ssr
 *.sw?
 .env
 .vercel
+
+# Knowledge base crawler data
+knowlegebase_crawler/
+
+# Python service directory
+python_service/
+
+# Kiro IDE files
+.kiro/

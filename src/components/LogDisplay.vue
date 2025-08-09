@@ -1,144 +1,144 @@
 <template>
-  <div class="log-display relative p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-black rounded-xl shadow-lg" :class="isExpanded ? 'min-h-[22.2rem] max-h-screen overflow-hidden' : 'h-[22.2rem] overflow-hidden'">
-    <!-- WebSocket 連線狀態指示器 -->
-    <div class="absolute bottom-6 left-6 flex items-center space-x-2 text-xs">
-      <div class="w-2 h-2 rounded-full" :class="{
-        'bg-green-500 animate-pulse': connectionStatus === '連接已建立',
-        'bg-red-500': connectionStatus === '連接已斷開' || connectionStatus === '連接錯誤',
-        'bg-gray-400': connectionStatus === '未連接'
-      }"></div>
-      <span class="text-gray-500 dark:text-gray-400">{{ connectionStatus }}</span>
-    </div>
-    <div class="flex items-center justify-between mb-6">
-      <div class="flex items-center space-x-3">
-        <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
-        <h3 class="text-xl text-blue-700 dark:text-white">搜索進度</h3>
-      </div>
-      <button
-        v-if="searchSteps.length > 0"
-        @click="toggleExpanded"
-        class="text-sm px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
-      >
-        {{ isExpanded ? '收起' : '展開全部' }}
-      </button>
-    </div>
-
-    <!-- Collapsed View: Show only latest step and progress bar -->
-    <div v-if="!isExpanded" class="space-y-4">
-      <!-- Empty State -->
-      <div v-if="searchSteps.length === 0" class="text-center py-8">
-        <div class="flex justify-center mx-auto mb-0">
-          <img src="/polarbear.svg" alt="Polar Bear" class="w-28 h-28 object-contain" />
+  <div 
+    class="log-display flex flex-col p-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-black rounded-xl shadow-lg"
+    :class="isExpanded ? 'min-h-[22.2rem] max-h-screen' : 'h-[22.2rem]'"
+  >
+    <div class="flex-shrink-0">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-3">
+          <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+          <h3 class="text-xl text-blue-700 dark:text-white">搜索進度</h3>
         </div>
-        <p class="text-gray-500 dark:text-gray-300 text-sm">等待搜索開始...</p>
-      </div>
-
-      <!-- Latest Step -->
-      <div v-if="latestStep" class="transform transition-all duration-500 ease-out">
-        <div class="flex items-start space-x-4 p-4 rounded-xl" :class="{
-          'bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-gray-500': latestStep.status === 'processing',
-          'bg-green-50 dark:bg-gray-700 border border-green-200 dark:border-gray-500': latestStep.status === 'completed',
-          'bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700': latestStep.status === 'pending'
-        }">
-          <!-- Step Icon -->
-          <div class="flex-shrink-0 mt-1">
-            <div v-if="latestStep.status === 'processing'" class="w-5 h-5 bg-blue-500 rounded-full animate-pulse flex items-center justify-center">
-              <div class="w-2 h-2 bg-white rounded-full animate-ping"></div>
-            </div>
-            <div v-else-if="latestStep.status === 'completed'" class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-            </div>
-            <div v-else class="w-5 h-5 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-          </div>
-          
-          <!-- Step Content -->
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center space-x-2 mb-1">
-              <h4 class="text-sm font-semibold" :class="{
-                'text-blue-700 dark:text-gray-200': latestStep.status === 'processing',
-            'text-green-700 dark:text-gray-200': latestStep.status === 'completed',
-                'text-gray-500 dark:text-gray-400': latestStep.status === 'pending'
-              }">{{ latestStep.title }}</h4>
-              <span v-if="latestStep.duration" class="text-xs text-gray-500 dark:text-gray-400">
-                {{ latestStep.duration }}ms
-              </span>
-            </div>
-            <p class="text-sm break-words overflow-wrap-anywhere" :class="{
-              'text-blue-600 dark:text-white': latestStep.status === 'processing',
-            'text-green-600 dark:text-white': latestStep.status === 'completed',
-              'text-gray-500 dark:text-gray-400': latestStep.status === 'pending'
-            }">{{ latestStep.description }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Overall Progress Bar -->
-      <div v-if="searchSteps.length > 0" class="mt-6">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">整體進度</span>
-          <span class="text-sm text-gray-500 dark:text-gray-400">{{ completedSteps }}/{{ totalSteps }}</span>
-        </div>
-        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-          <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500" 
-               :style="{ width: progressPercentage + '%' }"></div>
-        </div>
+        <button
+          v-if="searchSteps.length > 0"
+          @click="toggleExpanded"
+          class="text-sm px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+        >
+          {{ isExpanded ? '收起' : '展開全部' }}
+        </button>
       </div>
     </div>
 
-    <!-- Expanded View: Show all steps -->
-    <div v-else class="space-y-4 overflow-y-auto custom-scrollbar" :style="{ maxHeight: 'calc(100vh - 200px)' }">
-      <div v-for="(step, index) in searchSteps" :key="index" class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 shadow-sm">
-        <div class="flex items-start space-x-4">
-          <!-- Step Number -->
-          <div class="flex-shrink-0">
-            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold" :class="{
-              'bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-gray-200': step.status === 'processing',
-           'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-gray-200': step.status === 'completed',
-              'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400': step.status === 'pending'
-            }">
-              {{ index + 1 }}
-            </div>
+    <div class="flex-grow overflow-hidden">
+      <!-- Collapsed View: Show only latest step and progress bar -->
+      <div v-if="!isExpanded" class="space-y-4">
+        <!-- Empty State -->
+        <div v-if="searchSteps.length === 0" class="text-center py-8">
+          <div class="flex justify-center mx-auto mb-0">
+            <img :src="polarBearImage" alt="Polar Bear" class="w-28 h-28 object-contain transition-opacity duration-300" />
           </div>
-          
-          <!-- Step Details -->
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between mb-2">
-              <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ step.title }}</h4>
-              <div class="flex items-center space-x-2">
-                <span v-if="step.duration" class="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                  {{ step.duration }}ms
+          <p class="text-gray-500 dark:text-gray-300 text-sm">等待搜索開始...</p>
+        </div>
+
+        <!-- Latest Step -->
+        <div v-if="latestStep" class="transform transition-all duration-500 ease-out">
+          <div class="flex items-start space-x-4 p-4 rounded-xl" :class="{
+            'bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-gray-500': latestStep.status === 'processing',
+            'bg-green-50 dark:bg-gray-700 border border-green-200 dark:border-gray-500': latestStep.status === 'completed',
+            'bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700': latestStep.status === 'pending'
+          }">
+            <!-- Step Icon -->
+            <div class="flex-shrink-0 mt-1">
+              <div v-if="latestStep.status === 'processing'" class="w-5 h-5 bg-blue-500 rounded-full animate-pulse flex items-center justify-center">
+                <div class="w-2 h-2 bg-white rounded-full animate-ping"></div>
+              </div>
+              <div v-else-if="latestStep.status === 'completed'" class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <div v-else class="w-5 h-5 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+            </div>
+            
+            <!-- Step Content -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center space-x-2 mb-1">
+                <h4 class="text-sm font-semibold" :class="{
+                  'text-blue-700 dark:text-gray-200': latestStep.status === 'processing',
+                  'text-green-700 dark:text-gray-200': latestStep.status === 'completed',
+                  'text-gray-500 dark:text-gray-400': latestStep.status === 'pending'
+                }">{{ latestStep.title }}</h4>
+                <span v-if="latestStep.duration" class="text-xs text-gray-500 dark:text-gray-400">
+                  {{ latestStep.duration }}ms
                 </span>
-                <span class="text-xs px-2 py-1 rounded-full" :class="{
+              </div>
+              <p class="text-sm break-words overflow-wrap-anywhere" :class="{
+                'text-blue-600 dark:text-white': latestStep.status === 'processing',
+                'text-green-600 dark:text-white': latestStep.status === 'completed',
+                'text-gray-500 dark:text-gray-400': latestStep.status === 'pending'
+              }">{{ latestStep.description }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Overall Progress Bar -->
+        <div v-if="searchSteps.length > 0" class="mt-6">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">整體進度</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">{{ completedSteps }}/{{ totalSteps }}</span>
+          </div>
+          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+            <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500" 
+                 :style="{ width: progressPercentage + '%' }"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expanded View: Show all steps -->
+      <div v-else class="h-full overflow-y-auto custom-scrollbar pr-2">
+        <div class="space-y-4">
+          <div v-for="(step, index) in searchSteps" :key="index" class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 shadow-sm">
+            <div class="flex items-start space-x-4">
+              <!-- Step Number -->
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold" :class="{
                   'bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-gray-200': step.status === 'processing',
-             'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-gray-200': step.status === 'completed',
+                  'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-gray-200': step.status === 'completed',
                   'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400': step.status === 'pending'
                 }">
-                  {{ step.status === 'processing' ? '進行中' : step.status === 'completed' ? '已完成' : '等待中' }}
-                </span>
+                  {{ index + 1 }}
+                </div>
               </div>
-            </div>
-            
-            <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 break-words overflow-wrap-anywhere">{{ step.description }}</p>
-            
-            <!-- Detailed Information -->
-            <div v-if="step.details" class="space-y-2">
-              <div v-if="step.details.method" class="text-xs">
-                <span class="font-medium text-gray-700 dark:text-gray-300">搜索方法:</span>
-                <span class="ml-2 bg-blue-50 dark:bg-gray-700 text-blue-700 dark:text-gray-200 px-2 py-1 rounded">{{ step.details.method }}</span>
-              </div>
-              <div v-if="step.details.query" class="text-xs">
-                <span class="font-medium text-gray-700 dark:text-gray-300">查詢內容:</span>
-                <span class="ml-2 text-gray-600 dark:text-gray-200 font-mono bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded">{{ step.details.query }}</span>
-              </div>
-              <div v-if="step.details.count !== undefined" class="text-xs">
-                <span class="font-medium text-gray-700 dark:text-gray-300">結果數量:</span>
-                <span class="ml-2 bg-green-50 dark:bg-gray-700 text-green-700 dark:text-gray-200 px-2 py-1 rounded">{{ step.details.count }} 筆</span>
-              </div>
-              <div v-if="step.details.error" class="text-xs">
-                <span class="font-medium text-red-700 dark:text-gray-200">錯誤信息:</span>
-                <span class="ml-2 text-red-600 dark:text-gray-200 bg-red-50 dark:bg-gray-700 px-2 py-1 rounded">{{ step.details.error }}</span>
+              
+              <!-- Step Details -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ step.title }}</h4>
+                  <div class="flex items-center space-x-2">
+                    <span v-if="step.duration" class="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                      {{ step.duration }}ms
+                    </span>
+                    <span class="text-xs px-2 py-1 rounded-full" :class="{
+                      'bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-gray-200': step.status === 'processing',
+                      'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-gray-200': step.status === 'completed',
+                      'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400': step.status === 'pending'
+                    }">
+                      {{ step.status === 'processing' ? '進行中' : step.status === 'completed' ? '已完成' : '等待中' }}
+                    </span>
+                  </div>
+                </div>
+                
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 break-words overflow-wrap-anywhere">{{ step.description }}</p>
+                
+                <!-- Detailed Information -->
+                <div v-if="step.details" class="space-y-2">
+                  <div v-if="step.details.method" class="text-xs">
+                    <span class="font-medium text-gray-700 dark:text-gray-300">搜索方法:</span>
+                    <span class="ml-2 bg-blue-50 dark:bg-gray-700 text-blue-700 dark:text-gray-200 px-2 py-1 rounded">{{ step.details.method }}</span>
+                  </div>
+                  <div v-if="step.details.query" class="text-xs">
+                    <span class="font-medium text-gray-700 dark:text-gray-300">查詢內容:</span>
+                    <span class="ml-2 text-gray-600 dark:text-gray-200 font-mono bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded">{{ step.details.query }}</span>
+                  </div>
+                  <div v-if="step.details.count !== undefined" class="text-xs">
+                    <span class="font-medium text-gray-700 dark:text-gray-300">結果數量:</span>
+                    <span class="ml-2 bg-green-50 dark:bg-gray-700 text-green-700 dark:text-gray-200 px-2 py-1 rounded">{{ step.details.count }} 筆</span>
+                  </div>
+                  <div v-if="step.details.error" class="text-xs">
+                    <span class="font-medium text-red-700 dark:text-gray-200">錯誤信息:</span>
+                    <span class="ml-2 text-red-600 dark:text-gray-200 bg-red-50 dark:bg-gray-700 px-2 py-1 rounded">{{ step.details.error }}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -146,7 +146,13 @@
       </div>
     </div>
 
-
+    <!-- WebSocket 連線狀態指示器 -->
+    <div class="flex-shrink-0 pt-4">
+      <div class="flex items-center space-x-2 text-xs">
+        <div class="w-2 h-2 rounded-full" :class="statusClass"></div>
+        <span class="text-gray-500 dark:text-gray-400">{{ displayedStatus }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -173,15 +179,43 @@ interface SearchStep {
 
 const searchSteps = ref<SearchStep[]>([]);
 const isExpanded = ref<boolean>(false);
-const connectionStatus = ref<string>('未連接');
+const connectionStatus = ref<string>('初始化中...');
+const isSearching = ref<boolean>(false);
+
+const displayedStatus = computed(() => {
+  if (isSearching.value) {
+    return '正在搜索...';
+  }
+  return connectionStatus.value;
+});
+
+const statusClass = computed(() => {
+  if (isSearching.value) {
+    return 'bg-blue-500 animate-pulse';
+  }
+  return {
+    'bg-green-500 animate-pulse': connectionStatus.value === '連接已建立',
+    'bg-red-500': connectionStatus.value === '連接已斷開' || connectionStatus.value === '連接錯誤',
+    'bg-blue-500': connectionStatus.value === '雲端部署 (無即時日誌)' || connectionStatus.value === '生產模式 (無即時日誌)' || connectionStatus.value === '非本地環境 (無即時日誌)',
+    'bg-yellow-500': connectionStatus.value === '日誌服務未連接' || connectionStatus.value === '日誌服務未連接 (停止重試)',
+    'bg-gray-400': connectionStatus.value === '未連接' || connectionStatus.value === '初始化中...'
+  };
+});
 
 // Debug: Log when searchSteps changes
 watch(searchSteps, (newSteps) => {
   console.log('Search steps updated:', newSteps);
+  const isFinished = newSteps.every(step => step.status === 'completed' || step.status === 'error');
+  if (isFinished) {
+    isSearching.value = false;
+  }
 }, { deep: true });
 
 let socket: WebSocket | null = null;
 let reconnectInterval: number | null = null;
+let connectionFailed: boolean = false;
+let maxReconnectAttempts = 3;
+let reconnectAttempts = 0;
 
 const toggleExpanded = () => {
   isExpanded.value = !isExpanded.value;
@@ -211,6 +245,19 @@ const totalSteps = computed(() => {
 const progressPercentage = computed(() => {
   if (totalSteps.value === 0) return 0;
   return Math.round((completedSteps.value / totalSteps.value) * 100);
+});
+
+// Reactive theme detection
+const isDarkMode = ref(false);
+
+// Function to update theme state
+const updateTheme = () => {
+  isDarkMode.value = document.documentElement.classList.contains('dark');
+};
+
+// Computed property for theme-appropriate polar bear image
+const polarBearImage = computed(() => {
+  return isDarkMode.value ? '/polar_bear_white.png' : '/polar_bear_black.png';
 });
 
 // Initialize search steps
@@ -272,6 +319,7 @@ const updateStepStatus = (stepId: string, status: SearchStep['status'], details?
 
 // Expose methods for parent component
 const startSearch = (query: string) => {
+  isSearching.value = true;
   console.log('Starting search with query:', query);
   initializeSearchSteps(query);
   console.log('Search steps initialized:', searchSteps.value);
@@ -288,50 +336,98 @@ defineExpose({
   updateSearchProgress
 });
 
-// WebSocket connection for real-time updates (optional enhancement)
+// WebSocket connection for real-time updates
 const connect = () => {
-  const apiUrl = import.meta.env.VITE_PYTHON_API_URL || 'http://localhost:8000';
-  const wsUrl = apiUrl.replace(/^http/, 'ws');
-  socket = new WebSocket(`${wsUrl}/ws/log`);
+  const apiUrl = import.meta.env.VITE_MULTI_FIELD_API_URL;
 
-  socket.onmessage = (event) => {
-    try {
-      const message = JSON.parse(event.data);
-      if (message.type === 'search_progress') {
-        updateSearchProgress(message.step, message.status, message.details);
+  if (!apiUrl) {
+    connectionStatus.value = '等待服務連接';
+    return;
+  }
+  
+  const wsUrl = apiUrl.replace(/^https/, 'wss');
+  
+  try {
+    connectionFailed = false; // Reset connection failure flag
+    socket = new WebSocket(`${wsUrl}/ws/log`);
+
+    socket.onmessage = (event) => {
+      // If we receive a message, the connection is clearly working.
+      connectionStatus.value = '連接已建立';
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type === 'search_progress') {
+          updateSearchProgress(message.step, message.status, message.details);
+        }
+      } catch (e) {
+        // Handle non-JSON log messages if needed
+        console.log('Received log message:', event.data);
       }
-    } catch (e) {
-      // Handle non-JSON log messages if needed
-      console.log('Received log message:', event.data);
-    }
-  };
+    };
 
-  socket.onclose = () => {
-    connectionStatus.value = '連接已斷開';
-    // Attempt to reconnect after 3 seconds
-    if (!reconnectInterval) {
-      reconnectInterval = window.setInterval(() => {
-        connect();
-      }, 3000);
-    }
-  };
+    socket.onerror = (error) => {
+      console.warn('WebSocket connection failed:', error);
+      connectionStatus.value = '日誌服務未連接';
+      connectionFailed = true; // Mark connection as failed
+      // Clear any reconnection attempts on error
+      if (reconnectInterval) {
+        clearInterval(reconnectInterval);
+        reconnectInterval = null;
+      }
+    };
 
-  socket.onerror = (error) => {
-    console.error('WebSocket error:', error);
-    connectionStatus.value = '連接錯誤';
-  };
+    socket.onclose = () => {
+      // Only attempt to reconnect if connection didn't fail and haven't exceeded max attempts
+      if (!connectionFailed && !reconnectInterval && reconnectAttempts < maxReconnectAttempts) {
+        connectionStatus.value = '連接已斷開';
+        reconnectInterval = window.setInterval(() => {
+          reconnectAttempts++;
+          if (reconnectAttempts >= maxReconnectAttempts) {
+            clearInterval(reconnectInterval!);
+            reconnectInterval = null;
+            connectionStatus.value = '日誌服務未連接 (停止重試)';
+            return;
+          }
+          connect();
+        }, 3000);
+      } else if (connectionFailed || reconnectAttempts >= maxReconnectAttempts) {
+        connectionStatus.value = '日誌服務未連接';
+      }
+    };
 
-  socket.onopen = () => {
-    connectionStatus.value = '連接已建立';
-    if (reconnectInterval) {
-      clearInterval(reconnectInterval);
-      reconnectInterval = null;
-    }
-  };
+    socket.onopen = () => {
+      connectionStatus.value = '連接已建立';
+      connectionFailed = false; // Reset failure flag on successful connection
+      reconnectAttempts = 0; // Reset reconnect attempts on successful connection
+      if (reconnectInterval) {
+        clearInterval(reconnectInterval);
+        reconnectInterval = null;
+      }
+    };
+  } catch (error) {
+    console.warn('WebSocket not supported in this environment:', error);
+    connectionStatus.value = '日誌服務不可用';
+  }
 };
 
 onMounted(() => {
   connect();
+  
+  // Initialize theme state
+  updateTheme();
+  
+  // Watch for theme changes using MutationObserver
+  const observer = new MutationObserver(() => {
+    updateTheme();
+  });
+  
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class']
+  });
+  
+  // Store observer reference for cleanup
+  (window as any).__themeObserver = observer;
 });
 
 onUnmounted(() => {
@@ -340,6 +436,16 @@ onUnmounted(() => {
   }
   if (reconnectInterval) {
     clearInterval(reconnectInterval);
+    reconnectInterval = null;
+  }
+  connectionFailed = false; // Reset connection state on unmount
+  reconnectAttempts = 0; // Reset reconnect attempts on unmount
+  
+  // Clean up theme observer
+  const observer = (window as any).__themeObserver;
+  if (observer) {
+    observer.disconnect();
+    delete (window as any).__themeObserver;
   }
 });
 </script>
@@ -367,4 +473,3 @@ onUnmounted(() => {
   background: #374151;
 }
 </style>
-

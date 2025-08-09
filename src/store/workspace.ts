@@ -8,7 +8,8 @@ export interface SearchResult {
   id: string;
   task_id: string;
   user_id: string;
-  query_text: string;
+  query_text: any; // JSONB format: {query: string} for general, {content: string, dispute: string, etc.} for multi-field
+  search_mode: string; // 'general' or 'multi_field'
   results: any;
   case_ids: string[];
   search_count: number;
@@ -26,7 +27,7 @@ export interface Task {
   created_at: string;
   searchResults?: any | null; // This field holds the search results (optional for local state)
   currentQuery?: string; // Current query text in search input
-  latestSearchResult?: SearchResult | null; // Latest search result from database
+  latestSearchHistory?: SearchResult[] | null; // Latest search results from database
 }
 
 // Keep Workspace as an alias for backward compatibility
@@ -164,18 +165,27 @@ export const useWorkspaceStore = defineStore('workspace', () => {
   // Backward compatibility function
   const updateWorkspaceName = updateTaskName;
 
-  // Save search results to database with case_ids
-  async function saveSearchResults(queryText: string, results: any, caseIds: string[] = [], addedToDocGen: any = null) {
+  // Save search results to database with case_ids and search_mode
+  async function saveSearchResults(queryText: string | object, results: any, caseIds: string[] = [], addedToDocGen: any = null, searchMode: string = 'general') {
     const authStore = useAuthStore();
     if (!authStore.user || !activeTaskId.value) return;
 
     try {
+      // Convert queryText to proper JSONB format
+      let queryTextJsonb;
+      if (typeof queryText === 'string') {
+        queryTextJsonb = { query: queryText };
+      } else {
+        queryTextJsonb = queryText;
+      }
+
       // Use the upsert function to handle duplicate queries
       const { data: _data, error: supabaseError } = await supabase
-        .rpc('upsert_search_result', {
+        .rpc('upsert_search_result_v2', {
           p_task_id: activeTaskId.value,
           p_user_id: authStore.user.id,
-          p_query_text: queryText,
+          p_query_text: queryTextJsonb,
+          p_search_mode: searchMode,
           p_results: results,
           p_case_ids: caseIds,
           p_added_to_doc_gen: addedToDocGen
@@ -187,7 +197,7 @@ export const useWorkspaceStore = defineStore('workspace', () => {
       if (activeTask.value) {
         activeTask.value.searchResults = results;
         // Load the latest search result to update the state
-        await loadLatestSearchResult(activeTaskId.value);
+        await loadSearchHistory(activeTaskId.value);
       }
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to save search results';
@@ -221,32 +231,36 @@ export const useWorkspaceStore = defineStore('workspace', () => {
     }
   }
 
-  // Load latest search result for a task and update local state
-  async function loadLatestSearchResult(taskId: string) {
+  // Load search history for a task and update local state
+  async function loadSearchHistory(taskId: string) {
     const authStore = useAuthStore();
     if (!authStore.user) return null;
 
     try {
       const { data, error: supabaseError } = await supabase
-        .rpc('get_latest_search_result', { task_uuid: taskId });
+        .from('search_results')
+        .select('*')
+        .eq('task_id', taskId)
+        .order('created_at', { ascending: false })
+        .limit(5);
 
       if (supabaseError) throw supabaseError;
 
       const task = tasks.value.find(t => t.id === taskId);
-      if (task && data && data.length > 0) {
-        const latestResult = data[0] as SearchResult;
+      if (task && data) {
+        const searchHistory = data as SearchResult[];
         
-        task.latestSearchResult = latestResult;
-        task.searchResults = latestResult.results;
+        task.latestSearchHistory = searchHistory;
+        task.searchResults = searchHistory.length > 0 ? searchHistory[0].results : null;
         // Don't override currentQuery if user is typing
         if (!task.currentQuery) {
-          task.currentQuery = latestResult.query_text;
+          task.currentQuery = searchHistory.length > 0 ? searchHistory[0].query_text : '';
         }
       }
 
-      return data && data.length > 0 ? data[0] : null;
+      return data;
     } catch (err) {
-      console.error('Error loading latest search result:', err);
+      console.error('Error loading search history:', err);
       return null;
     }
   }
@@ -262,7 +276,7 @@ export const useWorkspaceStore = defineStore('workspace', () => {
   // Get current query text for a task
   function getCurrentQuery(taskId: string): string {
     const task = tasks.value.find(t => t.id === taskId);
-    return task?.currentQuery || task?.latestSearchResult?.query_text || '';
+    return task?.currentQuery || (task?.latestSearchHistory && task.latestSearchHistory.length > 0 ? task.latestSearchHistory[0].query_text : '');
   }
 
   // Clear current query (on logout)
@@ -320,29 +334,32 @@ export const useWorkspaceStore = defineStore('workspace', () => {
         .from('search_results')
         .select('*')
         .eq('task_id', activeTaskId.value)
-        .order('last_searched_at', { ascending: false })
-        .limit(1);
+        .order('created_at', { ascending: false })
+        .limit(5);
 
       if (supabaseError) throw supabaseError;
       
       if (data && data.length > 0) {
-        const searchResult = data[0];
-        const results = searchResult.results || [];
+        const selectedCasesMap = new Map();
+
+        data.forEach(searchResult => {
+          const results = searchResult.results || [];
+          results.forEach((result: any) => {
+            const addedToDocGen = searchResult.added_to_doc_gen?.[result.case_id];
+            if (addedToDocGen === 'y') {
+              selectedCasesMap.set(result.case_id, {
+                case_id: result.case_id,
+                title: result.case_id,
+                court: result.court,
+                date: result.date_decided,
+                summary: result.summary,
+                relevance_score: result.relevance_score
+              });
+            }
+          });
+        });
         
-        // Filter results where added_to_doc_gen is 'y'
-        const selectedCases = results.filter((result: any) => {
-          const addedToDocGen = searchResult.added_to_doc_gen?.[result.case_id];
-          return addedToDocGen === 'y';
-        }).map((result: any) => ({
-          case_id: result.case_id,
-          title: result.title || result.case_number,
-          court: result.court,
-          date: result.date_decided,
-          summary: result.summary,
-          relevance_score: result.relevance_score
-        }));
-        
-        return selectedCases;
+        return Array.from(selectedCasesMap.values());
       }
       
       return [];
@@ -378,7 +395,7 @@ export const useWorkspaceStore = defineStore('workspace', () => {
     error,
     saveSearchResults,
     loadSearchResults,
-    loadLatestSearchResult,
+    loadSearchHistory,
     updateCurrentQuery,
     getCurrentQuery,
     clearCurrentQueries,

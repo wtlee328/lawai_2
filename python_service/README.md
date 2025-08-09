@@ -1,21 +1,98 @@
----
-title: LawAI 2.0 Python Service
-emoji: ⚖️
-colorFrom: blue
-colorTo: purple
-sdk: docker
-app_port: 7860
----
-
 # LawAI 2.0 Python Service
 
-This is the backend API service for LawAI 2.0, providing legal case search capabilities.
+This directory contains the Python backend services for the legal case search system.
+
+## Directory Structure
+
+```
+python_service/
+├── search_service/          # Core search functionality
+│   ├── main.py             # FastAPI application
+│   ├── law_case_search.py  # Original search service
+│   └── law_case_search_2.py # Enhanced search service
+├── ingestion/              # Data ingestion scripts
+│   ├── memory_optimized_ingest.py    # Recommended ingestion script
+│   ├── ingest_embeddings_to_supabase.py
+│   ├── clear_supabase_table.py
+│   └── run_embedding_and_ingest.py
+├── optimization_tools/     # Embedding optimization tools
+│   ├── fast_optimize_embeddings.py   # Recommended optimization
+│   ├── optimize_embeddings.py
+│   ├── final_cleanup.py
+│   └── verify_optimization.py
+├── utilities/              # Analysis and reporting tools
+│   ├── quick_embedding_status.py
+│   ├── generate_embedding_report.py
+│   └── optimization_summary.py
+├── tests/                  # Test files
+│   ├── test_unit_core_components.py
+│   ├── test_integration_comprehensive.py
+│   └── test_performance_quality.py
+└── embedding_generation/   # Core embedding generation system
+    ├── main_controller.py  # Main embedding controller
+    ├── multi_field_generator.py
+    ├── config.py
+    └── ... (other core modules)
+```
+
+## Quick Start
+
+### 1. Search Service
+```bash
+cd search_service
+python main.py
+```
+
+### 2. Embedding Generation
+```bash
+cd embedding_generation
+python main_controller.py
+```
+
+### 3. Optimization (if needed)
+```bash
+cd optimization_tools
+python fast_optimize_embeddings.py
+```
+
+### 4. Ingestion
+```bash
+cd ingestion
+python memory_optimized_ingest.py
+```
+
+## Environment Setup
+
+1. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+2. Set environment variables:
+```bash
+export SUPABASE_URL="your_supabase_url"
+export SUPABASE_SERVICE_KEY="your_service_key"
+export OPENAI_API_KEY="your_openai_key"
+```
+
+## Core Workflows
+
+### Embedding Generation Workflow
+1. Run embedding generation: `embedding_generation/main_controller.py`
+2. Optimize embeddings: `optimization_tools/fast_optimize_embeddings.py`
+3. Ingest to database: `ingestion/memory_optimized_ingest.py`
+
+### Search Service Workflow
+1. Start search service: `search_service/main.py`
+2. Access API at `http://localhost:8000`
 
 ## Features
 
 - **Legal Case Search**: Advanced search functionality with multiple search methods
-- **Real-time Logging**: WebSocket-based logging for real-time monitoring
-- **CORS Support**: Configurable CORS for frontend integration
+- **Embedding Generation**: Multi-field embedding generation with quality assurance
+- **Memory-Optimized Ingestion**: Efficient data ingestion for large datasets
+- **Optimization Tools**: Tools to reduce embedding file sizes
+- **Real-time Monitoring**: Progress tracking and performance metrics
 
 ## API Endpoints
 
@@ -30,8 +107,6 @@ This is the backend API service for LawAI 2.0, providing legal case search capab
 
 ## Environment Variables
 
-The following environment variables need to be configured in Hugging Face Spaces:
-
 - `OPENAI_API_KEY` - OpenAI API key
 - `SUPABASE_URL` - Supabase project URL
 - `SUPABASE_KEY` - Supabase anon key
@@ -39,18 +114,16 @@ The following environment variables need to be configured in Hugging Face Spaces
 - `ALLOWED_ORIGINS` - Comma-separated list of allowed CORS origins
 - `PORT` - Port number (defaults to 7860 for Hugging Face)
 
-## Deployment
+## Documentation
 
-This service is containerized and ready for deployment on Hugging Face Spaces. The Docker configuration automatically:
+Each directory contains its own README.md with specific usage instructions:
 
-- Installs all required dependencies
-- Sets up a non-root user for security
-- Configures health checks
-- Exposes the service on port 7860
-
-## Usage
-
-Once deployed, the service will be available at your Hugging Face Space URL. You can integrate it with your frontend by updating the API base URL to point to your deployed service.
+- [Search Service](search_service/README.md)
+- [Ingestion](ingestion/README.md)
+- [Optimization Tools](optimization_tools/README.md)
+- [Utilities](utilities/README.md)
+- [Tests](tests/README.md)
+- [Embedding Generation](embedding_generation/README.md)
 
 ## Security
 

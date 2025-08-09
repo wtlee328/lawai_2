@@ -1,0 +1,111 @@
+-- Fix multi-field search function parameter names to avoid ambiguity
+
+DROP FUNCTION IF EXISTS match_cases_multi_field;
+
+CREATE OR REPLACE FUNCTION match_cases_multi_field(
+  query_content_embedding vector(1536) DEFAULT NULL,
+  query_dispute_embedding vector(1536) DEFAULT NULL,
+  query_opinion_embedding vector(1536) DEFAULT NULL,
+  query_result_embedding vector(1536) DEFAULT NULL,
+  match_threshold float DEFAULT 0.5,
+  match_count int DEFAULT 50,
+  field_weights jsonb DEFAULT '{"content": 0.4, "dispute": 0.3, "opinion": 0.2, "result": 0.1}'::jsonb
+)
+RETURNS TABLE (
+  case_id text,
+  case_content text,
+  case_topic text,
+  case_date text,
+  court text,
+  dispute text,
+  opinion text,
+  result text,
+  url text,
+  laws jsonb,
+  content_similarity float,
+  dispute_similarity float,
+  opinion_similarity float,
+  result_similarity float,
+  weighted_similarity float
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  content_weight float := COALESCE((field_weights->>'content')::float, 0.4);
+  dispute_weight float := COALESCE((field_weights->>'dispute')::float, 0.3);
+  opinion_weight float := COALESCE((field_weights->>'opinion')::float, 0.2);
+  result_weight float := COALESCE((field_weights->>'result')::float, 0.1);
+BEGIN
+  RETURN QUERY
+  SELECT 
+    c.case_id,
+    c.content as case_content,
+    c.topic as case_topic,
+    c.date::text as case_date,
+    c.court,
+    c.dispute,
+    c.opinion,
+    c.result,
+    c.url,
+    c.laws,
+    -- Individual similarity scores (1 - cosine distance)
+    CASE 
+      WHEN query_content_embedding IS NOT NULL AND c.content_embedding IS NOT NULL 
+      THEN 1 - (c.content_embedding <=> query_content_embedding)
+      ELSE 0.0
+    END as content_similarity,
+    CASE 
+      WHEN query_dispute_embedding IS NOT NULL AND c.dispute_embedding IS NOT NULL 
+      THEN 1 - (c.dispute_embedding <=> query_dispute_embedding)
+      ELSE 0.0
+    END as dispute_similarity,
+    CASE 
+      WHEN query_opinion_embedding IS NOT NULL AND c.opinion_embedding IS NOT NULL 
+      THEN 1 - (c.opinion_embedding <=> query_opinion_embedding)
+      ELSE 0.0
+    END as opinion_similarity,
+    CASE 
+      WHEN query_result_embedding IS NOT NULL AND c.result_embedding IS NOT NULL 
+      THEN 1 - (c.result_embedding <=> query_result_embedding)
+      ELSE 0.0
+    END as result_similarity,
+    -- Weighted combined similarity
+    (
+      CASE 
+        WHEN query_content_embedding IS NOT NULL AND c.content_embedding IS NOT NULL 
+        THEN content_weight * (1 - (c.content_embedding <=> query_content_embedding))
+        ELSE 0.0
+      END +
+      CASE 
+        WHEN query_dispute_embedding IS NOT NULL AND c.dispute_embedding IS NOT NULL 
+        THEN dispute_weight * (1 - (c.dispute_embedding <=> query_dispute_embedding))
+        ELSE 0.0
+      END +
+      CASE 
+        WHEN query_opinion_embedding IS NOT NULL AND c.opinion_embedding IS NOT NULL 
+        THEN opinion_weight * (1 - (c.opinion_embedding <=> query_opinion_embedding))
+        ELSE 0.0
+      END +
+      CASE 
+        WHEN query_result_embedding IS NOT NULL AND c.result_embedding IS NOT NULL 
+        THEN result_weight * (1 - (c.result_embedding <=> query_result_embedding))
+        ELSE 0.0
+      END
+    ) as weighted_similarity
+  FROM case_2 c
+  WHERE 
+    -- At least one embedding field must match the threshold
+    (
+      (query_content_embedding IS NOT NULL AND c.content_embedding IS NOT NULL AND 
+       (1 - (c.content_embedding <=> query_content_embedding)) > match_threshold) OR
+      (query_dispute_embedding IS NOT NULL AND c.dispute_embedding IS NOT NULL AND 
+       (1 - (c.dispute_embedding <=> query_dispute_embedding)) > match_threshold) OR
+      (query_opinion_embedding IS NOT NULL AND c.opinion_embedding IS NOT NULL AND 
+       (1 - (c.opinion_embedding <=> query_opinion_embedding)) > match_threshold) OR
+      (query_result_embedding IS NOT NULL AND c.result_embedding IS NOT NULL AND 
+       (1 - (c.result_embedding <=> query_result_embedding)) > match_threshold)
+    )
+  ORDER BY weighted_similarity DESC
+  LIMIT match_count;
+END;
+$$;
