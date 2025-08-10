@@ -490,78 +490,7 @@ async function handleSearch() {
 
 
 
-// Generate Judicial Yuan URL for case details
-function generateJudicialUrl(caseId: string, decisionDate?: string): string {
-  if (!caseId) return '#';
-  
-  // Base URL for Judicial Yuan
-  const baseUrl = 'https://judgment.judicial.gov.tw/FJUD/';
-  
-  // Parse case ID to extract components
-  // Example: "最高法院 112 年度台上字第 2881 號 民事判決"
-  const caseIdMatch = caseId.match(/(\S+)\s+(\d+)\s+年度(\S+)字第\s*(\d+)\s*號/);
-  
-  if (!caseIdMatch) {
-    // Fallback to simple search if parsing fails
-    return `${baseUrl}default.aspx?jud=${encodeURIComponent(caseId)}`;
-  }
-  
-  const [, court, year, caseType, caseNumber] = caseIdMatch;
-  
-  // Map court names to codes
-  const courtCodeMap: { [key: string]: string } = {
-    '最高法院': 'TPSV',
-    '臺灣高等法院': 'TPH',
-    '臺灣臺北地方法院': 'TPD',
-    '臺灣新北地方法院': 'PCD',
-    '臺灣士林地方法院': 'SLD',
-    '臺灣桃園地方法院': 'TYD',
-    '臺灣新竹地方法院': 'SCD',
-    '臺灣苗栗地方法院': 'MLD',
-    '臺灣臺中地方法院': 'TCD',
-    '臺灣彰化地方法院': 'CHD',
-    '臺灣南投地方法院': 'NTD',
-    '臺灣雲林地方法院': 'ULD',
-    '臺灣嘉義地方法院': 'CYD',
-    '臺灣臺南地方法院': 'TND',
-    '臺灣高雄地方法院': 'KSD',
-    '臺灣屏東地方法院': 'PTD',
-    '臺灣臺東地方法院': 'TTD',
-    '臺灣花蓮地方法院': 'HLD',
-    '臺灣宜蘭地方法院': 'ILD',
-    '臺灣基隆地方法院': 'KLD',
-    '臺灣澎湖地方法院': 'PHD',
-    '福建金門地方法院': 'KMD',
-    '福建連江地方法院': 'LCD',
-    '智慧財產及商業法院': 'IPC',
-    '最高行政法院': 'TPA',
-    '臺北高等行政法院': 'TPB',
-    '臺中高等行政法院': 'TCB',
-    '高雄高等行政法院': 'KSB'
-  };
-  
-  const courtCode = courtCodeMap[court] || 'TPSV'; // Default to Supreme Court
-  
-  // Format decision date to YYYYMMDD
-  let formattedDate = '';
-  if (decisionDate) {
-    // Parse standard date format (YYYY-MM-DD)
-    const date = new Date(decisionDate);
-    if (!isNaN(date.getTime())) {
-      formattedDate = date.toISOString().slice(0, 10).replace(/-/g, '');
-    }
-  }
-  
-  // Use current date as fallback
-  if (!formattedDate) {
-    formattedDate = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-  }
-  
-  // Construct the URL according to the specified format
-  const dataUrl = `${baseUrl}data.aspx?ty=JD&id=${courtCode}%2c${year}%2c${caseType}%2c${caseNumber}%2c${formattedDate}%2c1`;
-  
-  return dataUrl;
-}
+
 
 // 暴露方法給父組件使用
 defineExpose({
@@ -941,9 +870,12 @@ defineExpose({
                   'border-t-gray-200 dark:border-t-gray-500': result.added_to_doc_gen !== 'y' && Math.round(result.relevance_score * 100) < 80
                 }" class="mt-4 pt-4 border-t">
                   <div class="flex justify-between items-center">
-                    <a :href="generateJudicialUrl(result.case_id, result.date_decided)" target="_blank" class="text-sm font-medium text-blue-500 dark:text-gray-200 hover:text-blue-600 dark:hover:text-white hover:underline">
+                    <a v-if="result.url" :href="result.url" target="_blank" class="text-sm font-medium text-blue-500 dark:text-gray-200 hover:text-blue-600 dark:hover:text-white hover:underline">
                       查看全文 →
                     </a>
+                    <span v-else class="text-sm font-medium text-gray-400 dark:text-gray-500">
+                      無可用連結
+                    </span>
                     <button 
                       @click="toggleAddToDocGen(historyIndex, index)"
                       :class="{
